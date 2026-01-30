@@ -1,0 +1,49 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/NunitoSans.ttf",
+      "sha1": "8c01360cd531b3c1988d314db01656c8ef45207c"
+    },
+    {
+      "path": "assets/fonts/Quicksand-Bold.ttf",
+      "sha1": "111e880f4de54ccf0a7fd14f38999b9c066e46bb"
+    },
+    {
+      "path": "assets/fonts/InterTight-Bold.ttf",
+      "sha1": "523d5132be90d07d77d5effcff8fcd2a5e862179"
+    },
+    {
+      "path": "assets/fonts/Quicksand-Medium.ttf",
+      "sha1": "04b8198132a4a092b10d0631500268d6a2a0f889"
+    },
+    {
+      "path": "assets/fonts/InterTight-Medium.ttf",
+      "sha1": "c0f1ee383ef09b42b631eacbf97e80cec56d55ee"
+    },
+    {
+      "path": "assets/fonts/InterTight-Regular.ttf",
+      "sha1": "236dec5e7d0c08f3221a64281d8acd324149cb8b"
+    },
+    {
+      "path": "assets/fonts/Quicksand-Regular.ttf",
+      "sha1": "61504eaec812663121918199aac7d960229bd306"
+    },
+    {
+      "path": "assets/fonts/NunitoSans-Italic.ttf",
+      "sha1": "410740a6f03cfa4b36e22724178b7e9eb7920826"
+    },
+    {
+      "path": "assets/fonts/TiroDevanagariHindi-Regular.ttf",
+      "sha1": "ef67b6ecb1d5ef20f309aab707098afbec5babbb"
+    },
+    {
+      "path": "assets/fonts/Quicksand-VariableFont_wght.ttf",
+      "sha1": "4ee75a4e8cdc8d7cb73c9d37859d5e96da254ecb"
+    },
+    {
+      "path": "assets/fonts/TiroDevanagariHindi-Italic.ttf",
+      "sha1": "19b36ecc6a9c104c91635b51be61389709eeb7b5"
+    }
+  ]
+}
