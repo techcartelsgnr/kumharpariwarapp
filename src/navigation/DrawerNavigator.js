@@ -27,7 +27,7 @@ import {
 import { DeviceSize, FontSizes, Fonts, useTheme } from "../theme/theme";
 
 import MainStack from "./MainStack";
-import {GalleryScreen, GuestHouseDetail, GuestHouseScreen} from "./index";
+import {GalleryScreen, GuestHouseDetail, GuestHouseScreen, HostelScreen} from "./index";
 
 
 const Drawer = createDrawerNavigator();
@@ -126,6 +126,7 @@ function CustomDrawerContent(props) {
             iconColor={colors.info}
             activeRoute={currentRoute}
             colors={colors}
+            onPress={() => props.navigation.navigate("HostelScreen")}
           />
 
           <DrawerItem
@@ -244,7 +245,7 @@ export default function DrawerNavigator() {
       <Drawer.Screen name="Home" component={MainStack} />
       <Drawer.Screen name="GalleryScreen" component={GalleryScreen} />
       <Drawer.Screen name="GuestHouseScreen" component={GuestHouseScreen} />
-      <Drawer.Screen name="GuestHouseDetail" component={GuestHouseDetail} />
+      <Drawer.Screen name="HostelScreen" component={HostelScreen} />
     </Drawer.Navigator>
   );
 }

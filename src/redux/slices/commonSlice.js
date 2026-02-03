@@ -86,16 +86,17 @@ export const getMarksSummaryData = createAsyncThunk(
 
 
 // ===============================
-// ⭐ fetch notification
+// ⭐ Fetch Notifications
 // ===============================
-
 export const fetchNotifications = createAsyncThunk(
   "common/fetchNotifications",
   async (token, { rejectWithValue }) => {
     try {
-      const { count, notifications } = await commanServices.getNotifications(token);
+      const { count, notifications } =
+        await commanServices.getNotifications(token);
+
       return { count, notifications };
-    } catch (err) {
+    } catch (error) {
       return rejectWithValue("Unable to load notifications");
     }
   }
@@ -272,13 +273,12 @@ const commonSlice = createSlice({
       .addCase(fetchNotifications.fulfilled, (state, action) => {
         state.notificationsLoading = false;
         state.notifications = action.payload.notifications;
-
-        // ⭐ unread badge count from API
-        state.unreadCount = action.payload.count;
+        state.unreadCount = action.payload.count; // 🔔 badge count
       })
-      .addCase(fetchNotifications.rejected, (state) => {
+      .addCase(fetchNotifications.rejected, (state, action) => {
         state.notificationsLoading = false;
       });
+
 
   },
 });

@@ -74,7 +74,7 @@ const Header = () => {
 
       {/* ================= RIGHT SECTION ================= */}
       <View style={styles.rightIcons}>
-        <TouchableOpacity style={{ paddingRight: 8 }}>
+        <TouchableOpacity style={{ paddingRight: 8 }} onPress={() => navigation.navigate("NotificationScreen")}>
           <Bell size={21} color={colors.textPrimary} />
         </TouchableOpacity>
 

@@ -11,8 +11,9 @@ import {
   ChangePassword,
   ContactSearch,
   ContactsList,
-  HostalScreen,
+  HostelScreen,
   KaryKarniScreen,
+  NotificationScreen,
   SuggestionScreen,
   UpdateProfile
 } from './index';
@@ -27,7 +28,7 @@ const MainStack = () => {
       <Stack.Screen name="ContactSearch" component={ContactSearch} />
       <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
       
-      <Stack.Screen name="HostalScreen" component={HostalScreen} />
+      <Stack.Screen name="HostelScreen" component={HostelScreen} />
       <Stack.Screen name="KaryKarniScreen" component={KaryKarniScreen} />
       <Stack.Screen name="BusinessCategory" component={BusinessCategory} />
       <Stack.Screen name="AllBusinessCategory" component={AllBusinessCategory} />
@@ -37,6 +38,7 @@ const MainStack = () => {
       <Stack.Screen name="SuggestionScreen" component={SuggestionScreen} />
       <Stack.Screen name="AddPostScreen" component={AddPostScreen} />
       <Stack.Screen name="AddContact" component={AddContact} />
+      <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
       
     </Stack.Navigator>
   );

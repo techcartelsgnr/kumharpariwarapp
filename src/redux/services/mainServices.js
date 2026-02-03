@@ -196,6 +196,31 @@ const getGuestHouses = async (page, token) => {
 };
 
 
+// ================================
+// 📌 Get Hostel List (AUTH REQUIRED)
+// ================================
+const getHostels = async (token) => {
+  try {
+    const res = await publicAxios.get("/get_hostel", {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    const hostelData = res?.data?.data?.hostel || {};
+    const list = hostelData?.data || [];
+
+    return list; // ✅ keep it simple
+  } catch (error) {
+    console.log(
+      "Get Hostel API Error:",
+      error?.response?.data || error.message
+    );
+    return [];
+  }
+};
+
+
 
 
 
@@ -217,6 +242,7 @@ const mainServices = {
   getBusinessSubCategories,
   getContactsBySubCategory,
   getGuestHouses,
+  getHostels,
   
 };
 export default mainServices;

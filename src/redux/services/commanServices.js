@@ -164,41 +164,39 @@ const getOurProud = async (token) => {
 
 
 
-
 // ================================
-// 📌 Get Today's Notifications
+// 📌 Get Notifications
 // ================================
 const getNotifications = async (token) => {
   try {
-    const res = await authAxios.get("/student/notifications/today", {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
+    const res = await authAxios.get("/notification", {
+      headers: token
+        ? { Authorization: "Bearer " + token }
+        : undefined,
     });
 
-    const data = res.data || {};
+    const list = res?.data?.data || [];
 
     return {
-      count: data.count || 0,
-      notifications: (data.notifications || []).map(item => ({
+      count: list.length,
+      notifications: list.map(item => ({
         id: item.id,
         title: item.title,
-        message: item.message,
-        image: item.attachment_url
-          ? "https://theschoolmate.in" + item.attachment_url
-          : null,
-        time: item.created_at,
-        isNew: item.is_new,              // ⭐ changed from isRead → isNew
-        delivery: item.delivery_status,
+        message: item.description,
+        targetType: item.target_type,
+        createdAt: item.created_at,
       })),
     };
-
   } catch (error) {
-    console.log("Notifications API Error:", error);
-    return { count: 0, notifications: [] };
+    console.log("Notifications API Error:", error?.response?.data || error.message);
+    return {
+      count: 0,
+      notifications: [],
+    };
   }
 };
+
+
 
 
 /* ===============================
