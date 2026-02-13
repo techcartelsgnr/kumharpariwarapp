@@ -12,7 +12,7 @@ import {
   ContactSearch,
   ContactsList,
   HostelScreen,
-  KaryKarniScreen,
+  KaryakariniMembers,
   NotificationScreen,
   SuggestionScreen,
   UpdateProfile
@@ -27,9 +27,8 @@ const MainStack = () => {
       <Stack.Screen name="AboutScreen" component={AboutScreen} />
       <Stack.Screen name="ContactSearch" component={ContactSearch} />
       <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
-      
       <Stack.Screen name="HostelScreen" component={HostelScreen} />
-      <Stack.Screen name="KaryKarniScreen" component={KaryKarniScreen} />
+      
       <Stack.Screen name="BusinessCategory" component={BusinessCategory} />
       <Stack.Screen name="AllBusinessCategory" component={AllBusinessCategory} />
       <Stack.Screen name="BusinessSubCategory" component={BusinessSubCategory} />

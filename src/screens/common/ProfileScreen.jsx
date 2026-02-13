@@ -249,7 +249,7 @@ const OptionItem = ({ icon, label, onPress, colors }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, paddingBottom: 70, },
 
-  scroll: { padding: Spacing.lg },
+  scroll: { padding: Spacing.md },
 
   profileCard: {
     flexDirection: "row",
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     padding: Spacing.sm,
     borderRadius: BorderRadius.large,
     borderWidth: 1,
-    marginTop: Spacing.md,
+    marginTop: Spacing.smt,
   },
 
   /* ✅ reused for theme row */

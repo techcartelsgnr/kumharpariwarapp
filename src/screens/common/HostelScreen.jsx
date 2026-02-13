@@ -11,7 +11,7 @@ import {
 
 import AppHeader from "../../components/AppHeader";
 import EmptyState from "../../components/EmptyState";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import mainServices from "../../redux/services/mainServices";
 
 // ✅ THEME IMPORTS (as you asked)
@@ -30,6 +30,7 @@ const HostelScreen = () => {
     const { token } = useSelector(state => state.auth);
     const [hostels, setHostels] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         loadHostels();
@@ -49,11 +50,14 @@ const HostelScreen = () => {
         setLoading(false);
     };
 
-    const onRefresh = useCallback(() => {
-        if (token) {
-            dispatch(fetchOurProud(token));
-        }
-    }, [token, dispatch]);
+    const onRefresh = async () => {
+        setRefreshing(true);
+
+        // 👇 KEEP YOUR EXISTING CALL HERE
+        dispatch(getHostels(token));
+
+        setRefreshing(false);
+    };
 
     const renderItem = ({ item }) => (
         <View
@@ -131,8 +135,9 @@ const HostelScreen = () => {
                     showsVerticalScrollIndicator={false}
                     refreshControl={
                         <RefreshControl
-                            refreshing={ourProudLoading}
+                            refreshing={refreshing}
                             onRefresh={onRefresh}
+                            colors={[colors.primary]}
                             tintColor={colors.primary}
                         />
                     }

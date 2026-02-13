@@ -310,15 +310,15 @@ formData.append("location", String(location));
 };
 
 
-
 /* ===============================
-   📸 Get Gallery (PUBLIC API)
+   📸 Get Gallery (AUTH REQUIRED)
 ================================ */
-const getGallery = async () => {
+const getGallery = async (token) => {
   try {
     const res = await authAxios.get("/gallery", {
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -326,25 +326,20 @@ const getGallery = async () => {
       id: item.id,
       title: item.title ?? "",
       type: item.type ?? "image",
-      img: item.file_path, // ✅ FULL IMAGE URL from API
+      img: item.file_path, // ✅ already full URL
       createdAt: item.created_at,
     }));
 
-    return {
-      images,
-      message: res?.data?.message || "Success",
-    };
+    return { images };
   } catch (error) {
     console.log(
       "Gallery API Error:",
       error?.response?.data || error.message
     );
-    return {
-      images: [],
-      message: "Failed to load gallery",
-    };
+    throw error;
   }
 };
+
 
 
 

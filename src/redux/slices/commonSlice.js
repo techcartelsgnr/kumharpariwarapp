@@ -103,6 +103,21 @@ export const fetchNotifications = createAsyncThunk(
 );
 
 
+// ===============================
+// 📸 Fetch Gallery
+// ===============================
+export const fetchGallery = createAsyncThunk(
+  "common/fetchGallery",
+  async ({ token }, { rejectWithValue }) => {
+    try {
+      const { images } = await commanServices.getGallery(token);
+      return images;
+    } catch (error) {
+      return rejectWithValue("Unable to load gallery");
+    }
+  }
+);
+
 // 🔥 MAIN COMMON SLICE
 const commonSlice = createSlice({
   name: "common",
@@ -144,6 +159,11 @@ const commonSlice = createSlice({
     },
     ourProudLoading: false,
     ourProudError: null,
+
+    // gallery
+    gallery: [],
+    galleryLoading: false,
+    galleryError: null,
 
   },
   reducers: {
@@ -277,6 +297,22 @@ const commonSlice = createSlice({
       })
       .addCase(fetchNotifications.rejected, (state, action) => {
         state.notificationsLoading = false;
+      });
+    /* ------------------ Get Galeery ------------------ */
+      builder
+      // FETCH GALLERY
+      .addCase(fetchGallery.pending, state => {
+        state.galleryLoading = true;
+        state.galleryError = null;
+      })
+      .addCase(fetchGallery.fulfilled, (state, action) => {
+        state.galleryLoading = false;
+        state.gallery = action.payload;
+      })
+      .addCase(fetchGallery.rejected, (state, action) => {
+        state.galleryLoading = false;
+        state.gallery = [];
+        state.galleryError = action.payload;
       });
 
 

@@ -13,17 +13,30 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react-native';
-import { useTheme, FontSizes, Fonts, Spacing, BorderRadius } from '../../theme/theme';
-import commanServices from '../../redux/services/commanServices';
+import {
+  useTheme,
+  FontSizes,
+  Fonts,
+  Spacing,
+  BorderRadius,
+} from '../../theme/theme';
 import AppHeader from '../../components/AppHeader';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchGallery } from '../../redux/slices/commonSlice';
 
 const { width, height } = Dimensions.get('window');
 
 const GalleryScreen = () => {
   const { colors, isDarkMode } = useTheme();
+  const dispatch = useDispatch();
+  // 🔐 GET TOKEN FROM AUTH SLICE
+      const { token } = useSelector(state => state.auth);
 
-  const [gallery, setGallery] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    gallery,
+    galleryLoading,
+  } = useSelector(state => state.common);
+
   const [refreshing, setRefreshing] = useState(false);
 
   // Full screen
@@ -31,31 +44,15 @@ const GalleryScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   /* =============================
-     FETCH GALLERY
+     FETCH GALLERY (REDUX)
   ============================== */
   useEffect(() => {
-    loadGallery();
+    dispatch(fetchGallery({token}));
   }, []);
-
-  const loadGallery = () => {
-    setLoading(true);
-    commanServices
-      .getGallery()
-      .then(res => setGallery(res.images || []))
-      .catch(err => console.log('Gallery Error:', err))
-      .finally(() => setLoading(false));
-  };
 
   const onRefresh = () => {
     setRefreshing(true);
-    commanServices
-      .getGallery()
-      
-      .then(res => setGallery(res.images || []))
-      .catch(err => console.log(err))
-      .finally(() => setRefreshing(false));
-      console.log('Gallery images:', gallery);
-
+    dispatch(fetchGallery()).finally(() => setRefreshing(false));
   };
 
   /* =============================
@@ -87,15 +84,29 @@ const GalleryScreen = () => {
   ============================== */
   const renderGalleryItem = ({ item, index }) => (
     <TouchableOpacity
-      style={[styles.galleryItem, index % 3 !== 2 && styles.itemSpacing]}
+      style={[
+        styles.galleryItem,
+        index % 3 !== 2 && styles.itemSpacing,
+      ]}
       onPress={() => openFullScreen(index)}
     >
-      <Image source={{ uri: item.img }} style={styles.galleryImage} />
+      <Image
+        source={{ uri: item.img }}
+        style={styles.galleryImage}
+        onError={() =>
+          console.log('❌ Image failed:', item.img)
+        }
+      />
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: colors.background },
+      ]}
+    >
       <StatusBar
         backgroundColor={colors.background}
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
@@ -106,15 +117,20 @@ const GalleryScreen = () => {
       {/* GRID */}
       {!isFullScreen && (
         <>
-          {loading ? (
+          {galleryLoading ? (
             <ActivityIndicator
               size="large"
               color={colors.primary}
               style={{ marginTop: Spacing.xl }}
             />
           ) : gallery.length === 0 ? (
-            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-              No images found
+            <Text
+              style={[
+                styles.emptyText,
+                { color: colors.textSecondary },
+              ]}
+            >
+              No images found {token}
             </Text>
           ) : (
             <FlatList
@@ -141,8 +157,11 @@ const GalleryScreen = () => {
           {...panResponder.panHandlers}
         >
           {/* Close */}
-          <TouchableOpacity style={styles.closeButton} onPress={closeFullScreen}>
-            <X size={30} color={colors.textWhite} />
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={closeFullScreen}
+          >
+            <X size={30} color={colors.textSecondary} />
           </TouchableOpacity>
 
           {/* Image */}
@@ -155,9 +174,11 @@ const GalleryScreen = () => {
           {currentIndex > 0 && (
             <TouchableOpacity
               style={styles.leftNav}
-              onPress={() => setCurrentIndex(prev => prev - 1)}
+              onPress={() =>
+                setCurrentIndex(prev => prev - 1)
+              }
             >
-              <ChevronLeft size={40} color={colors.textWhite} />
+              <ChevronLeft size={40} color={colors.textSecondary} />
             </TouchableOpacity>
           )}
 
@@ -165,9 +186,11 @@ const GalleryScreen = () => {
           {currentIndex < gallery.length - 1 && (
             <TouchableOpacity
               style={styles.rightNav}
-              onPress={() => setCurrentIndex(prev => prev + 1)}
+              onPress={() =>
+                setCurrentIndex(prev => prev + 1)
+              }
             >
-              <ChevronRight size={40} color={colors.textWhite} />
+              <ChevronRight size={40} color={colors.textSecondary} />
             </TouchableOpacity>
           )}
 
@@ -175,7 +198,7 @@ const GalleryScreen = () => {
           <Text
             style={[
               styles.counter,
-              { color: colors.textWhite },
+              { color: colors.textSecondary },
             ]}
           >
             {currentIndex + 1} / {gallery.length}
@@ -262,7 +285,7 @@ const styles = StyleSheet.create({
   counter: {
     position: 'absolute',
     bottom: Spacing.lg,
-    fontFamily: Fonts.quicksand.medium,
+    fontFamily: Fonts.quicksand.bold,
     fontSize: FontSizes.normal,
   },
 });

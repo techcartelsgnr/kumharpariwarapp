@@ -221,6 +221,79 @@ const getHostels = async (token) => {
 };
 
 
+// ===============================
+// 👥 Get Karyakarini List
+// ===============================
+const getKaryakarini = async (token) => {
+  try {
+    const res = await publicAxios.get("/karyakarini", {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const karyakarini = (res?.data?.data || []).map(item => ({
+      id: item.id,
+      name: item.name ?? "",
+      email: item.email ?? "",
+      mobile: item.mobile ?? "",
+      description: item.description ?? "",
+      image: item.image, // ✅ full image path
+      registrationDate: item.registration_date,
+      status: item.status,
+      createdAt: item.created_at,
+    }));
+
+    return { karyakarini };
+  } catch (error) {
+    console.log(
+      "Karyakarini API Error:",
+      error?.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+
+// ===============================
+// 👤 Get Karyakarini Members
+// ===============================
+const getKaryakariniMembers = async (token, karyakariniId) => {
+  try {
+    const res = await publicAxios.get(
+      `/karyakarini_members/${karyakariniId}`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const members = (res?.data?.data || []).map(item => ({
+      id: item.id,
+      karyakariniId: item.karyakarini_id,
+      name: item.name ?? "",
+      email: item.email ?? "",
+      mobile: item.mobile ?? "",
+      designation: item.designation ?? "",
+      image: item.image, // ✅ full image URL
+      status: item.status,
+      order: Number(item.order) || 0,
+      createdAt: item.created_at,
+    }));
+
+    return { members };
+  } catch (error) {
+    console.log(
+      "Karyakarini Members API Error:",
+      error?.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
 
 
 
@@ -243,6 +316,8 @@ const mainServices = {
   getContactsBySubCategory,
   getGuestHouses,
   getHostels,
+  getKaryakarini,
+  getKaryakariniMembers,
   
 };
 export default mainServices;

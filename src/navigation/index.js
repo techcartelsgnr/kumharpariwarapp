@@ -11,6 +11,7 @@ export { default as GuestHouseScreen } from '../screens/common/GuestHouseScreen'
 export { default as GuestHouseDetail } from '../screens/common/GuestHouseDetail';
 export { default as HostelScreen } from '../screens/common/HostelScreen';
 export { default as KaryKarniScreen } from '../screens/common/KaryKarniScreen';
+export { default as KaryakariniMembers } from '../screens/common/KaryakariniMembers';
 export { default as MyContactScreen } from '../screens/common/MyContactScreen';
 export { default as OurProud } from '../screens/common/OurProud';
 export { default as PostScreen } from '../screens/common/PostScreen';

@@ -87,6 +87,44 @@ export const fetchGuestHouses = createAsyncThunk(
   }
 );
 
+// ===============================
+// 👥 Fetch Karyakarini
+// ===============================
+export const fetchKaryakarini = createAsyncThunk(
+  "main/fetchKaryakarini",
+  async ({ token }, { rejectWithValue }) => {
+    try {
+      const { karyakarini } = await mainServices.getKaryakarini(token);
+      console.log('Main Slice --- LN---98', karyakarini);
+      return karyakarini;
+
+    } catch (error) {
+      return rejectWithValue("Unable to load karyakarini");
+    }
+  }
+);
+
+
+// ===============================
+// 👤 Fetch Karyakarini Members
+// ===============================
+export const fetchKaryakariniMembers = createAsyncThunk(
+  "main/fetchKaryakariniMembers",
+  async ({ token, karyakariniId }, { rejectWithValue }) => {
+    try {
+      const { members } = await mainServices.getKaryakariniMembers(
+        token,
+        karyakariniId
+      );
+      return members; // ✅ array
+    } catch (error) {
+      return rejectWithValue("Unable to load karyakarini members");
+    }
+  }
+);
+
+
+
 
 
 
@@ -129,6 +167,14 @@ const mainSlice = createSlice({
       nextPage: null,
       prevPage: null,
     },
+
+    karyakarini: [],
+    karyakariniLoading: false,
+    karyakariniError: null,
+
+    karyakariniMembers: [],
+    karyakariniMembersLoading: false,
+    karyakariniMembersError: null,
 
   },
   reducers: {},
@@ -209,6 +255,43 @@ const mainSlice = createSlice({
       state.guestHousesLoading = false;
       state.guestHousesError = action.payload;
     });
+
+    builder
+      // ===============================
+      // 👥 KARYAKARINI
+      // ===============================
+      .addCase(fetchKaryakarini.pending, state => {
+        state.karyakariniLoading = true;
+        state.karyakariniError = null;
+      })
+      .addCase(fetchKaryakarini.fulfilled, (state, action) => {
+        state.karyakariniLoading = false;
+        state.karyakarini = action.payload;
+      })
+      .addCase(fetchKaryakarini.rejected, (state, action) => {
+        state.karyakariniLoading = false;
+        state.karyakarini = [];
+        state.karyakariniError = action.payload;
+      });
+
+    /* ===== FETCH KARYAKARINI MEMBERS ===== */
+    builder.addCase(fetchKaryakariniMembers.pending, (state) => {
+      state.karyakariniMembersLoading = true;
+      state.karyakariniMembersError = null;
+    });
+
+    builder.addCase(fetchKaryakariniMembers.fulfilled, (state, action) => {
+      state.karyakariniMembersLoading = false;
+      state.karyakariniMembers = action.payload; // ✅ always array
+    });
+
+    builder.addCase(fetchKaryakariniMembers.rejected, (state, action) => {
+      state.karyakariniMembersLoading = false;
+      state.karyakariniMembers = [];
+      state.karyakariniMembersError = action.payload;
+    });
+
+
 
 
 
