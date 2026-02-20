@@ -110,35 +110,7 @@ function CustomDrawerContent(props) {
             onPress={() => props.navigation.navigate("GalleryScreen")}
           />
 
-          <DrawerItem
-            label="कार्यकारिणी"
-            route="Committee"
-            Icon={Users}
-            iconColor={colors.accent}
-            activeRoute={currentRoute}
-            colors={colors}
-            onPress={() => props.navigation.navigate("KaryKarniScreen")}
-          />
-
-          <DrawerItem
-            label="Hostel / छात्रावास"
-            route="Hostel"
-            Icon={Building2}
-            iconColor={colors.info}
-            activeRoute={currentRoute}
-            colors={colors}
-            onPress={() => props.navigation.navigate("HostelScreen")}
-          />
-
-          <DrawerItem
-            label="Guest House"
-            route="GuestHouse"
-            Icon={Hotel}
-            iconColor={colors.primaryDark}
-            activeRoute={currentRoute}
-            colors={colors}
-            onPress={() => props.navigation.navigate("GuestHouseScreen")}
-          />
+         
         </View>
       </DrawerContentScrollView>
 
@@ -245,10 +217,8 @@ export default function DrawerNavigator() {
     >
       <Drawer.Screen name="Home" component={MainStack} />
       <Drawer.Screen name="GalleryScreen" component={GalleryScreen} />
-      <Drawer.Screen name="GuestHouseScreen" component={GuestHouseScreen} />
-      <Drawer.Screen name="HostelScreen" component={HostelScreen} />
-      <Drawer.Screen name="KaryKarniScreen" component={KaryKarniScreen} />
-      <Drawer.Screen name="KaryakariniMembers" component={KaryakariniMembers} />
+
+     
     </Drawer.Navigator>
   );
 }

@@ -7,6 +7,7 @@ import {
     ActivityIndicator,
     RefreshControl,
     Image,
+    TouchableOpacity,
 } from "react-native";
 
 import AppHeader from "../../components/AppHeader";
@@ -22,10 +23,12 @@ import {
     BorderRadius,
     useTheme,
 } from "../../theme/theme";
+import { useNavigation } from "@react-navigation/native";
 
 const HostelScreen = () => {
     const { colors } = useTheme();
     const dispatch = useDispatch();
+    const navigation = useNavigation();
     // 🔐 GET TOKEN FROM AUTH SLICE
     const { token } = useSelector(state => state.auth);
     const [hostels, setHostels] = useState([]);
@@ -60,7 +63,7 @@ const HostelScreen = () => {
     };
 
     const renderItem = ({ item }) => (
-        <View
+        <TouchableOpacity
             style={[
                 styles.card,
                 {
@@ -69,6 +72,11 @@ const HostelScreen = () => {
                     ...Shadows.light,
                 },
             ]}
+            onPress={() =>
+                navigation.navigate("HostelDetail", {
+                    hostelId: item.id,
+                })
+            }
         >
             {item.image ? (
                 <Image
@@ -104,7 +112,7 @@ const HostelScreen = () => {
             >
                 📞 {item.contact_call}
             </Text>
-        </View>
+        </TouchableOpacity>
     );
 
     return (

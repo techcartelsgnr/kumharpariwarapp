@@ -124,6 +124,83 @@ export const fetchKaryakariniMembers = createAsyncThunk(
 );
 
 
+// ===============================
+// 🏨 Fetch Hostel By ID
+// ===============================
+export const fetchHostelById = createAsyncThunk(
+  "hostel/fetchHostelById",
+  async ({ token, id }, { rejectWithValue }) => {
+    try {
+      const { hostels } = await mainServices.getHostelById(token, id);
+      return hostels;
+    } catch (error) {
+      return rejectWithValue(
+        error?.message || "Failed to fetch hostel"
+      );
+    }
+  }
+);
+
+// ===============================
+// 📰 Fetch News
+// ===============================
+export const fetchNews = createAsyncThunk(
+  "main/fetchNews",
+  async ({ token, page = 1 }, thunkAPI) => {
+    try {
+      return await mainServices.getNews(token, page);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error?.message || "Failed to load news"
+      );
+    }
+  }
+);
+
+
+// ===============================
+// 🏙️ Fetch Cities
+// ===============================
+export const fetchCities = createAsyncThunk(
+  "main/fetchCities",
+  async ({ token }, thunkAPI) => {
+    try {
+      const { cities } = await mainServices.getCities(token);
+      return cities;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error?.message || "Failed to load cities"
+      );
+    }
+  }
+);
+
+// search keyword
+export const fetchSearchResults = createAsyncThunk(
+  "main/fetchSearchResults",
+  async (
+    { token, keyword = "", city_id = null, category_id = null, page = 1 },
+    thunkAPI
+  ) => {
+    try {
+      return await mainServices.getSearchResults(
+        token,
+        keyword,
+        city_id,
+        category_id,
+        page
+      );
+    } catch (e) {
+      return thunkAPI.rejectWithValue(
+        e?.message || "Search failed"
+      );
+    }
+  }
+);
+
+
+
+
 
 
 
@@ -175,6 +252,38 @@ const mainSlice = createSlice({
     karyakariniMembers: [],
     karyakariniMembersLoading: false,
     karyakariniMembersError: null,
+
+    hostelDetails: [],
+    hostelLoading: false,
+    hostelError: null,
+
+    // News
+    news: [],
+    newsLoading: false,
+    newsError: null,
+    newsPagination: {
+      currentPage: 1,
+      lastPage: 1,
+      total: 0,
+      perPage: 6,
+      nextPage: null,
+      prevPage: null,
+    },
+    // Cities
+    cities: [],
+    citiesLoading: false,
+    citiesError: null,
+    // searchresults
+    searchResults: [],
+    searchLoading: false,
+    searchError: null,
+    searchPagination: {
+      currentPage: 1,
+      lastPage: 1,
+      total: 0,
+    },
+
+
 
   },
   reducers: {},
@@ -290,6 +399,93 @@ const mainSlice = createSlice({
       state.karyakariniMembers = [];
       state.karyakariniMembersError = action.payload;
     });
+
+    // ✅ Hostel Detail
+    builder.addCase(fetchHostelById.pending, (state) => {
+      state.hostelLoading = true;
+      state.hostelError = null;
+    })
+
+    builder.addCase(fetchHostelById.fulfilled, (state, action) => {
+      state.hostelLoading = false;
+      state.hostelDetails = action.payload;
+    })
+
+    builder.addCase(fetchHostelById.rejected, (state, action) => {
+      state.hostelLoading = false;
+      state.hostelError = action.payload;
+    });
+
+    /* ===== FETCH NEWS ===== */
+    builder.addCase(fetchNews.pending, (state) => {
+      state.newsLoading = true;
+      state.newsError = null;
+    });
+
+    builder.addCase(fetchNews.fulfilled, (state, action) => {
+      state.newsLoading = false;
+
+      // ✅ Pagination Merge (same logic as Guest Houses)
+      if (action.payload.pagination.currentPage === 1) {
+        state.news = action.payload.news;
+      } else {
+        state.news = [
+          ...state.news,
+          ...action.payload.news,
+        ];
+      }
+
+      state.newsPagination = action.payload.pagination;
+    });
+
+    builder.addCase(fetchNews.rejected, (state, action) => {
+      state.newsLoading = false;
+      state.newsError = action.payload;
+    });
+
+    /* ===== FETCH CITIES ===== */
+    builder.addCase(fetchCities.pending, (state) => {
+      state.citiesLoading = true;
+      state.citiesError = null;
+    });
+
+    builder.addCase(fetchCities.fulfilled, (state, action) => {
+      state.citiesLoading = false;
+      state.cities = action.payload;   // ✅ array of cities
+    });
+
+    builder.addCase(fetchCities.rejected, (state, action) => {
+      state.citiesLoading = false;
+      state.citiesError = action.payload;
+    });
+    /* ===== SEARCH CONTACTS ===== */
+    builder.addCase(fetchSearchResults.pending, (state) => {
+      state.searchLoading = true;
+      state.searchError = null;
+    });
+
+    builder.addCase(fetchSearchResults.fulfilled, (state, action) => {
+      state.searchLoading = false;
+
+      const { contacts, pagination } = action.payload;
+
+      if (pagination.currentPage === 1) {
+        state.searchResults = contacts;   // ✅ fresh search
+      } else {
+        state.searchResults = [
+          ...state.searchResults,
+          ...contacts,
+        ]; // ✅ pagination append
+      }
+
+      state.searchPagination = pagination;
+    });
+
+    builder.addCase(fetchSearchResults.rejected, (state, action) => {
+      state.searchLoading = false;
+      state.searchError = action.payload;
+    });
+
 
 
 

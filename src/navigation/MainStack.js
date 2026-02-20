@@ -11,11 +11,16 @@ import {
   ChangePassword,
   ContactSearch,
   ContactsList,
+  GuestHouseDetail,
+  GuestHouseScreen,
   HostelScreen,
   KaryakariniMembers,
+  KaryKarniScreen,
   NotificationScreen,
   SuggestionScreen,
-  UpdateProfile
+  UpdateProfile,
+  HostelDetail,
+  PostDetail,
 } from './index';
 
 const Stack = createNativeStackNavigator();
@@ -28,6 +33,9 @@ const MainStack = () => {
       <Stack.Screen name="ContactSearch" component={ContactSearch} />
       <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
       <Stack.Screen name="HostelScreen" component={HostelScreen} />
+      <Stack.Screen name="HostelDetail" component={HostelDetail} />
+      <Stack.Screen name="GuestHouseScreen" component={GuestHouseScreen} />
+      <Stack.Screen name="GuestHouseDetail" component={GuestHouseDetail} />
       
       <Stack.Screen name="BusinessCategory" component={BusinessCategory} />
       <Stack.Screen name="AllBusinessCategory" component={AllBusinessCategory} />
@@ -38,6 +46,9 @@ const MainStack = () => {
       <Stack.Screen name="AddPostScreen" component={AddPostScreen} />
       <Stack.Screen name="AddContact" component={AddContact} />
       <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
+      <Stack.Screen name="KaryKarniScreen" component={KaryKarniScreen} />
+      <Stack.Screen name="KaryakariniMembers" component={KaryakariniMembers} />
+      <Stack.Screen name="PostDetail" component={PostDetail} />
       
     </Stack.Navigator>
   );

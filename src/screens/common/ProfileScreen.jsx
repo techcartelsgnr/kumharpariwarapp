@@ -18,6 +18,9 @@ import {
   ChevronRight,
   Edit3,
   Moon, // ✅ optional icon
+  Users,
+  Building2,
+  Hotel,
 } from "lucide-react-native";
 
 import { useNavigation } from "@react-navigation/native";
@@ -154,6 +157,25 @@ const ProfileScreen = () => {
             icon={<MessageSquare size={20} color="#9333EA" />}
             label="Suggestion Box"
             onPress={() => navigation.navigate("SuggestionScreen")}
+            colors={colors}
+          />
+          <OptionItem
+            icon={<Users size={20} color="#FF6B6B" />}
+            label="कार्यकारिणी"
+            onPress={() => navigation.navigate("KaryKarniScreen")}
+            colors={colors}
+          />
+
+          <OptionItem
+            icon={<Building2 size={20} color="#FF4757" />}
+            label="Hostel / छात्रावास"
+            onPress={() => navigation.navigate("HostelScreen")}
+            colors={colors}
+          />
+          <OptionItem
+            icon={<Hotel size={20} color="#28A745" />}
+            label="Guest House"
+            onPress={() => navigation.navigate("GuestHouseScreen")}
             colors={colors}
           />
 

@@ -222,6 +222,49 @@ const getHostels = async (token) => {
 
 
 // ===============================
+// 🏨 Get Hostel By ID
+// ===============================
+const getHostelById = async (token, id) => {
+  try {
+   const res = await publicAxios.get(
+      `/get_hostel_by_id/${id}`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const hostels = (res?.data?.data?.hostel || []).map(item => ({
+      id: item.id,
+      name: item.name ?? "",
+      description: item.desp ?? "",
+      contactPerson: item.contact_person ?? "",
+      contactCall: item.contact_call ?? "",
+      contactWhatsapp: item.contact_whatsapp ?? "",
+      address: item.address ?? "",
+      state: item.state ?? "",
+      city: item.city ?? "",
+      image: item.image,          // ✅ full image URL
+      isVerify: item.is_verify,
+      createdAt: item.created_at,
+      updatedAt: item.updated_at,
+    }));
+
+    return { hostels };
+
+  } catch (error) {
+    console.log(
+      "Get Hostel By ID API Error:",
+      error?.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+
+// ===============================
 // 👥 Get Karyakarini List
 // ===============================
 const getKaryakarini = async (token) => {
@@ -295,6 +338,167 @@ const getKaryakariniMembers = async (token, karyakariniId) => {
 };
 
 
+// ===============================
+// 📰 Get News List
+// ===============================
+export const getNews = async (token, page = 1) => {
+  try {
+    const res = await publicAxios.get(
+      `/news?page=${page}`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const newsData = res?.data?.data?.news;
+
+    const news = (newsData?.data || []).map(item => ({
+      id: item.id,
+      title: item.title ?? "",
+      description: item.desp ?? "",
+      image: item.image,              // ✅ full image URL
+      createdDate: item.created_date ?? "",
+    }));
+
+    return {
+      news,
+      pagination: {
+        currentPage: newsData?.current_page,
+        lastPage: newsData?.last_page,
+        nextPage: newsData?.next_page_url,
+        total: newsData?.total,
+      },
+    };
+
+  } catch (error) {
+    console.log(
+      "News API Error:",
+      error?.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+
+// ===============================
+// 📰 Get News Detail
+// ===============================
+export const getNewsDetail = async (token, newsId) => {
+  try {
+    const res = await publicAxios.get(
+      `/news_detail/${newsId}`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const news = (res?.data?.data?.news || []).map(item => ({
+      id: item.id,
+      title: item.title ?? "",
+      description: item.desp ?? "",
+      image: item.image,             // ✅ full image URL
+      createdDate: item.created_date ?? "",
+    }));
+
+    return { news };
+
+  } catch (error) {
+    console.log(
+      "News Detail API Error:",
+      error?.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+
+// ===============================
+// 🏙️ Get Cities
+// ===============================
+export const getCities = async (token) => {
+  try {
+    const res = await publicAxios.get(
+      `/get_cities`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const cities = (res?.data?.data?.cities || []).map(item => ({
+      label: item.city ?? "",   // ✅ FIXED
+      value: item.city ?? "",   // ✅ FIXED
+      id: item.id,
+      cityId: item.city_id,
+      stateId: item.state_id,
+    }));
+
+    return { cities };
+
+  } catch (error) {
+    console.log(
+      "Cities API Error:",
+      error?.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+// ===============================
+// 🔍 Contact Search (Simple)
+// ===============================
+export const getSearchResults = async (
+  token,
+  keyword = "",
+  city_id = null,
+  category_id = null,
+  page = 1
+) => {
+  try {
+    const res = await publicAxios.post(
+      `/contact_search?page=${page}`,
+      {
+        keyword,
+        city_id,
+        category_id,
+      },
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const contactsData = res?.data?.data?.contacts;
+
+    return {
+      contacts: contactsData?.data || [],
+      pagination: {
+        currentPage: contactsData?.current_page ?? 1,
+        lastPage: contactsData?.last_page ?? 1,
+        total: contactsData?.total ?? 0,
+      },
+    };
+
+  } catch (error) {
+    console.log(
+      "Contact Search API Error:",
+      error?.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+
 
 
 
@@ -316,8 +520,13 @@ const mainServices = {
   getContactsBySubCategory,
   getGuestHouses,
   getHostels,
+  getHostelById,
   getKaryakarini,
   getKaryakariniMembers,
+  getNews,
+  getNewsDetail,
+  getCities,
+  getSearchResults,
   
 };
 export default mainServices;
