@@ -8,6 +8,8 @@ import {
     ActivityIndicator,
     StatusBar,
     RefreshControl,
+    Linking,
+    TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -95,15 +97,26 @@ const KaryakariniMembers = ({ route }) => {
                 )}
 
                 {item.mobile && (
-                    <Text style={[styles.text, { color: colors.textSecondary }]}>
-                        📞 {item.mobile}
-                    </Text>
+                    <TouchableOpacity
+                        onPress={() => Linking.openURL(`tel:${item.mobile}`)}
+                    >
+                        <Text style={[styles.text, { color: colors.textSecondary }]}>
+                            📞 {item.mobile}
+                        </Text>
+                    </TouchableOpacity>
+
                 )}
 
                 {item.email && (
-                    <Text style={[styles.text, { color: colors.textSecondary }]}>
-                        ✉️ {item.email}
-                    </Text>
+                    <TouchableOpacity
+                        onPress={() => Linking.openURL(`mailto:${item.email}`)}
+                    >
+
+                        <Text style={[styles.text, { color: colors.textSecondary }]}>
+                            ✉️ {item.email}
+                        </Text>
+                    </TouchableOpacity>
+
                 )}
             </View>
         </View>

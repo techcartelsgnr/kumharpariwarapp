@@ -208,10 +208,10 @@ const ContactsList = ({ route }) => {
               <Text
                 style={[
                   styles.location,
-                  { color: colors.textTertiary },
+                  { color: colors.textSecondary },
                 ]}
               >
-                {item.location}
+                Location - {item.location}
               </Text>
 
               <View style={styles.actions}>
@@ -228,7 +228,7 @@ const ContactsList = ({ route }) => {
                 <TouchableOpacity
                   style={[
                     styles.actionBtn,
-                    { backgroundColor: "#25D366" },
+                    { backgroundColor: "#25D366", marginLeft: 10, },
                   ]}
                   onPress={() => openWhatsApp(item.whatsapp)}
                 >
@@ -259,7 +259,8 @@ const styles = StyleSheet.create({
 
   card: {
     flexDirection: "row",
-    padding: Spacing.md,
+    alignItems: 'center',
+    padding: Spacing.smt,
     marginHorizontal: Spacing.md,
     marginTop: Spacing.md,
     borderRadius: BorderRadius.large,
@@ -295,7 +296,8 @@ const styles = StyleSheet.create({
   },
 
   actions: {
-    flexDirection: "row",
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     marginTop: Spacing.sm,
   },
 
@@ -303,7 +305,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 14,
     borderRadius: BorderRadius.medium,
-    marginRight: 10,
+    marginRight: 0,
   },
 
   actionText: {

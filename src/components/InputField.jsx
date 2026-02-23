@@ -12,6 +12,7 @@ import {
   FontSizes,
   TextStyles,
   BorderRadius,
+  Fonts,
 } from '../theme/theme';
 
 const InputField = ({
@@ -46,7 +47,7 @@ const InputField = ({
 
       <TextInput
         placeholder={label}
-        placeholderTextColor={colors.textTertiary}
+        placeholderTextColor={colors.textSecondary}
         keyboardType={keyboardType}
         secureTextEntry={isSecure}
         onChangeText={onChangeText}
@@ -89,19 +90,21 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: BorderRadius.medium,
+    borderRadius: BorderRadius.large,
     paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingVertical: 14,
     borderWidth: 1,
     width: '100%',
+    marginBottom: 10,
   },
 
   iconWrap: {
-    marginRight: 8,
+    marginRight: 5,
   },
 
   input: {
     ...TextStyles.body,
+    fontFamily: Fonts.quicksand.medium,
     fontSize: FontSizes.small,
     paddingVertical: 0,
   },

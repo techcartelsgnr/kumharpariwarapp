@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   thoughtCard: {
     flexDirection: "row",
     alignItems: "center",
-    marginHorizontal: Spacing.lg,
+    marginHorizontal: Spacing.md,
     marginTop: Spacing.sm,
     padding: Spacing.md,
     borderRadius: 12,

@@ -118,6 +118,47 @@ export const fetchGallery = createAsyncThunk(
   }
 );
 
+
+// ===============================
+// 📸 Fetch Terms
+// ===============================
+export const fetchTerms = createAsyncThunk(
+  'moreRepo/fetchTerms',
+  async ({ token }, thunkAPI) => {
+    try {
+      const response = await commanServices.getTerms({ token });
+      return response;
+    } catch (e) {
+      const message =
+        e?.response?.data?.message ||
+        e.message ||
+        'Something went wrong';
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// ===============================
+// 📸 Fetch AboutUS
+// ===============================
+export const fetchAbout = createAsyncThunk(
+  'moreRepo/fetchAbout',
+  async ({ token }, thunkAPI) => {
+    try {
+      const response = await commanServices.getAbout({ token });
+      return response;
+    } catch (e) {
+      const message =
+        e?.response?.data?.message ||
+        e.message ||
+        'Something went wrong';
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // 🔥 MAIN COMMON SLICE
 const commonSlice = createSlice({
   name: "common",
@@ -159,11 +200,18 @@ const commonSlice = createSlice({
     },
     ourProudLoading: false,
     ourProudError: null,
-
     // gallery
     gallery: [],
     galleryLoading: false,
     galleryError: null,
+    // ✅ ADD THIS
+    terms: null,
+    termsLoading: false,
+    termsError: null,
+    // ✅ About US
+    aboutus: null,
+    aboutusLoading: false,
+    aboutusError: null,
 
   },
   reducers: {
@@ -299,7 +347,7 @@ const commonSlice = createSlice({
         state.notificationsLoading = false;
       });
     /* ------------------ Get Galeery ------------------ */
-      builder
+    builder
       // FETCH GALLERY
       .addCase(fetchGallery.pending, state => {
         state.galleryLoading = true;
@@ -313,6 +361,39 @@ const commonSlice = createSlice({
         state.galleryLoading = false;
         state.gallery = [];
         state.galleryError = action.payload;
+      });
+
+    /////////////////////// ------Terms Message----- /////////////////////////////
+    builder
+      .addCase(fetchTerms.pending, (state) => {
+        state.termsLoading = true;
+        state.termsError = null;
+      })
+
+      .addCase(fetchTerms.fulfilled, (state, action) => {
+        state.termsLoading = false;
+        state.terms = action.payload?.data || action.payload;
+      })
+
+      .addCase(fetchTerms.rejected, (state, action) => {
+        state.termsLoading = false;
+        state.termsError = action.payload;
+      });
+    /////////////////////// ------About Us----- /////////////////////////////
+    builder
+      .addCase(fetchAbout.pending, (state) => {
+        state.aboutusLoading = true;
+        state.aboutusError = null;
+      })
+
+      .addCase(fetchAbout.fulfilled, (state, action) => {
+        state.aboutusLoading = false;
+        state.aboutus = action.payload?.data || action.payload;
+      })
+
+      .addCase(fetchAbout.rejected, (state, action) => {
+        state.aboutusLoading = false;
+        state.aboutusError = action.payload;
       });
 
 

@@ -361,7 +361,7 @@ export default AddContact;
    STYLES
 ================================ */
 const styles = StyleSheet.create({
-  container: { padding: Spacing.lg },
+  container: { padding: Spacing.md },
   label: { fontFamily: Fonts.quicksand.bold, marginBottom: 6 },
   error: { color: "red", fontSize: 12, marginBottom: 6 },
   dropdown: {

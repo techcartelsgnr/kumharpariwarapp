@@ -69,7 +69,6 @@ const NotificationScreen = () => {
           color: colors.textSecondary,
           fontFamily: Fonts.quicksand.medium,
           fontSize: FontSizes.small,
-          lineHeight: 20,
         }}
       />
 
@@ -122,7 +121,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
-    padding: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
     borderRadius: 10,
     borderWidth: 1,
     marginBottom: 12,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: Fonts.quicksand.bold,
     fontSize: FontSizes.medium,
-    marginBottom: 6,
+    marginBottom: 5,
   },
 //   time: {
 //     fontFamily: Fonts.quicksand.medium,

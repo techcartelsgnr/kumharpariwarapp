@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   StatusBar,
   TouchableOpacity,
+  Linking
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -82,7 +83,7 @@ const KaryKarniScreen = () => {
           <Text
             style={[
               styles.text,
-              { color: colors.textSecondary },
+              { color: colors.textPrimary },
             ]}
           >
             📞 {item.mobile}
@@ -93,7 +94,7 @@ const KaryKarniScreen = () => {
           <Text
             style={[
               styles.text,
-              { color: colors.textSecondary },
+              { color: colors.textPrimary },
             ]}
           >
             ✉️ {item.email}
@@ -104,7 +105,7 @@ const KaryKarniScreen = () => {
           <Text
             style={[
               styles.description,
-              { color: colors.textSecondary },
+              { color: colors.textPrimary },
             ]}
             numberOfLines={2}
           >
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
   },
 
   description: {
-    fontFamily: Fonts.quicksand.regular,
+    fontFamily: Fonts.quicksand.medium,
     fontSize: FontSizes.small,
     marginTop: 4,
   },

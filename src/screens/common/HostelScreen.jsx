@@ -89,7 +89,7 @@ const HostelScreen = () => {
             <Text
                 style={[
                     styles.title,
-                    { color: colors.text, fontFamily: Fonts.medium },
+                    { color: colors.textPrimary},
                 ]}
             >
                 {item.name}
@@ -98,7 +98,7 @@ const HostelScreen = () => {
             <Text
                 style={[
                     styles.address,
-                    { color: colors.textSecondary, fontFamily: Fonts.regular },
+                    { color: colors.textSecondary},
                 ]}
             >
                 {item.address}
@@ -107,7 +107,7 @@ const HostelScreen = () => {
             <Text
                 style={[
                     styles.contact,
-                    { color: colors.textSecondary, fontFamily: Fonts.regular },
+                    { color: colors.textSecondary },
                 ]}
             >
                 📞 {item.contact_call}
@@ -118,7 +118,6 @@ const HostelScreen = () => {
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
             <AppHeader title="Hostels" />
-
             {loading && (
                 <ActivityIndicator
                     size="large"
@@ -175,14 +174,17 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     title: {
-        fontSize: FontSizes.md,
+        fontSize: FontSizes.small,
+        fontFamily: Fonts.quicksand.bold,
         marginBottom: 4,
     },
     address: {
-        fontSize: FontSizes.sm,
+        fontSize: FontSizes.small,
+        fontFamily: Fonts.quicksand.bold,
         marginBottom: 4,
     },
     contact: {
-        fontSize: FontSizes.xs,
+        fontSize: FontSizes.small,
+        fontFamily: Fonts.quicksand.bold,
     },
 });

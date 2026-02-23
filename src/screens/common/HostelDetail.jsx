@@ -9,6 +9,8 @@ import {
     TouchableOpacity,
     Linking,
     StatusBar,
+    useWindowDimensions,
+    RefreshControl,
 } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -16,14 +18,21 @@ import { fetchHostelById } from "../../redux/slices/mainSlice";
 
 
 import AppHeader from "../../components/AppHeader";
-import { useTheme, FontSizes, BorderRadius } from "../../theme/theme";
+import { useTheme, FontSizes, BorderRadius, Fonts } from "../../theme/theme";
+import RenderHTML from "react-native-render-html";
 
 const HostelDetail = ({ route }) => {
     const dispatch = useDispatch();
+    const { width } = useWindowDimensions();
     const { hostelId } = route.params;
     const { token } = useSelector(state => state.auth);
 
     const { colors } = useTheme();
+
+    const onRefresh = () => {
+        if (!token) return;
+        dispatch(fetchHostelById({ token, id: hostelId }));
+    };
 
     const {
         hostelDetails,
@@ -90,7 +99,16 @@ const HostelDetail = ({ route }) => {
             {/* ✅ Header */}
             <AppHeader title="Hostel Details" />
 
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={hostelLoading}
+                        onRefresh={onRefresh}
+                        colors={[colors.primary]}
+                        tintColor={colors.primary}
+                    />
+                }
+            >
                 {/* ✅ Image */}
                 <Image
                     source={{ uri: hostel.image }}
@@ -120,18 +138,18 @@ const HostelDetail = ({ route }) => {
                     {/* ✅ Contact Card */}
                     <View
                         style={[
-                            styles.card,
+                            styles.card1,
                             {
                                 backgroundColor: colors.card,
                                 borderRadius: BorderRadius.medium,
                             },
                         ]}
                     >
-                        <Text style={[styles.label, { color: colors.textSecondary }]}>
-                            Contact Person
+                        <Text style={[styles.label1, { color: colors.textSecondary }]}>
+                            Contact Person --
                         </Text>
 
-                        <Text style={[styles.value, { color: colors.textPrimary }]}>
+                        <Text style={[styles.value1, { color: colors.textPrimary }]}>
                             {hostel.contactPerson}
                         </Text>
                     </View>
@@ -179,9 +197,42 @@ const HostelDetail = ({ route }) => {
                             Description
                         </Text>
 
-                        <Text style={[styles.value, { color: colors.textPrimary }]}>
+                        {/* <Text style={[styles.value, { color: colors.textPrimary }]}>
                             {hostel.description?.replace(/<[^>]*>/g, "")}
-                        </Text>
+                        </Text> */}
+
+                        <RenderHTML
+                            contentWidth={width}
+                            source={{ html: hostel.description }}
+                            baseStyle={{
+                                color: colors.textPrimary,
+                                fontSize: FontSizes.small,
+                                fontFamily: Fonts.quicksand.medium,
+                                lineHeight: 20,
+                            }}
+                            tagsStyles={{
+                                p: {
+                                    fontSize: FontSizes.small,
+                                    fontFamily: Fonts.quicksand.bold,
+                                    color: colors.textPrimary,
+                                    lineHeight: 22,
+                                },
+                                b: {
+                                    fontWeight: "800",
+                                },
+                                span: {
+                                    fontWeight: "500",
+                                    backgroundColor: colors.card,
+                                },
+                                strong: {
+                                    fontWeight: "900",
+                                },
+                                i: {
+                                    fontFamily: Fonts.quicksand.medium,
+                                },
+                                u: { textDecorationLine: "underline" },
+                            }}
+                        />
                     </View>
                 </View>
             </ScrollView>
@@ -208,18 +259,37 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     title: {
-        fontWeight: "600",
+        fontSize: FontSizes.small,
+        fontFamily: Fonts.quicksand.bold,
         marginBottom: 6,
     },
     address: {
         marginBottom: 16,
+        fontSize: FontSizes.small,
+        fontFamily: Fonts.quicksand.medium,
     },
     card: {
-        padding: 14,
+        padding: 0,
         marginBottom: 14,
     },
+    card1: {
+        padding: 0,
+        marginBottom: 18,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    label1: {
+        fontSize: FontSizes.small,
+        fontFamily: Fonts.quicksand.medium,
+    },
+    value1: {
+        fontSize: FontSizes.small,
+        fontFamily: Fonts.quicksand.bold,
+        marginLeft: 10,
+    },
     label: {
-        fontSize: 13,
+        fontSize: FontSizes.small,
+        fontFamily: Fonts.quicksand.medium,
         marginBottom: 4,
     },
     value: {

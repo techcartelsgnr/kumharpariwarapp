@@ -22,6 +22,7 @@ import {
   Fonts,
   BorderRadius,
   Shadows,
+  DeviceSize,
 } from "../../theme/theme";
 
 import { fetchGuestHouses } from "../../redux/slices/mainSlice";
@@ -138,7 +139,7 @@ const GuestHouseScreen = ({navigation}) => {
             { color: colors.textTertiary },
           ]}
         >
-          {item.city}, {item.state}
+          📍 {item.city}, {item.state}
         </Text>
       </View>
     </TouchableOpacity>
@@ -235,8 +236,9 @@ const styles = StyleSheet.create({
 
   image: {
     width: "100%",
-    height: 160,
+    height: DeviceSize.hp(22),
     backgroundColor: "#eee",
+    resizeMode: 'contain',
   },
 
   content: {
@@ -245,7 +247,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontFamily: Fonts.quicksand.bold,
-    fontSize: FontSizes.medium,
+    fontSize: FontSizes.normal,
     marginBottom: Spacing.xs,
   },
 

@@ -479,6 +479,7 @@ export const getSearchResults = async (
     );
 
     const contactsData = res?.data?.data?.contacts;
+    console.log('line number 482 mainServices', contactsData);
 
     return {
       contacts: contactsData?.data || [],

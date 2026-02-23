@@ -112,7 +112,7 @@ const OurProud = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background, paddingBottom: 70, }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background, paddingBottom: 75, }}>
       <AppHeader title="Our Proud" />
 
       <FlatList

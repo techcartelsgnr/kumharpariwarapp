@@ -340,7 +340,28 @@ const getGallery = async (token) => {
   }
 };
 
+// Terms & Conditions API
+const getTerms = async ({ token }) => {
+  const res = await authAxios.get('/get_cmspage/terms-condition', {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
+  return res.data; 
+};
+
+// Terms & Conditions API
+const getAbout = async ({ token }) => {
+  const res = await authAxios.get('/get_cmspage/about-us', {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data; 
+};
 
 
 
@@ -364,6 +385,8 @@ const commanServices = {
   addNewsByUser,
   addContact,
   getGallery,
+  getTerms,
+  getAbout,
  
 };
 export default commanServices;

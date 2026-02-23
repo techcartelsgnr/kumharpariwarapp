@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontFamily: Fonts.quicksand.medium,
+    fontFamily: Fonts.quicksand.bold,
     fontSize: FontSizes.small,
   },
 });

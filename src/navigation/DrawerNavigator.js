@@ -17,17 +17,17 @@ import {
   Home,
   ImageIcon,
   Users,
-  Building2,
-  Hotel,
   LogOut,
   ChevronRight,
+  FileText,
+  Info,
 } from "lucide-react-native";
 
 
 import { DeviceSize, FontSizes, Fonts, useTheme } from "../theme/theme";
 
 import MainStack from "./MainStack";
-import {GalleryScreen, GuestHouseDetail, GuestHouseScreen, HostelScreen, KaryakariniMembers, KaryKarniScreen} from "./index";
+import {AboutScreen, GalleryScreen, TermScreen, } from "./index";
 
 
 const Drawer = createDrawerNavigator();
@@ -108,6 +108,26 @@ function CustomDrawerContent(props) {
             activeRoute={currentRoute}
             colors={colors}
             onPress={() => props.navigation.navigate("GalleryScreen")}
+          />
+
+           <DrawerItem
+            label="Terms"
+            route="TermScreen"
+            Icon={FileText}
+            iconColor={colors.accent}
+            activeRoute={currentRoute}
+            colors={colors}
+            onPress={() => props.navigation.navigate("TermScreen")}
+          />
+
+           <DrawerItem
+            label="About Us"
+            route="AboutScreen"
+            Icon={Info}
+            iconColor={colors.info}
+            activeRoute={currentRoute}
+            colors={colors}
+            onPress={() => props.navigation.navigate("AboutScreen")}
           />
 
          
@@ -217,6 +237,8 @@ export default function DrawerNavigator() {
     >
       <Drawer.Screen name="Home" component={MainStack} />
       <Drawer.Screen name="GalleryScreen" component={GalleryScreen} />
+      <Drawer.Screen name="TermScreen" component={TermScreen} />
+      <Drawer.Screen name="AboutScreen" component={AboutScreen} />
 
      
     </Drawer.Navigator>

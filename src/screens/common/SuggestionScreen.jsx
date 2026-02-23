@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     },
 
     container: {
-        padding: Spacing.lg,
+        padding: Spacing.md,
     },
 
     label: {

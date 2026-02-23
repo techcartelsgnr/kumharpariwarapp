@@ -9,11 +9,14 @@ import {
   StatusBar,
   Platform,
   Dimensions,
+  useWindowDimensions,
+  Linking,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppHeader from "../../components/AppHeader";
 import { ArrowLeft, Phone, MapPin } from "lucide-react-native";
+import RenderHTML from "react-native-render-html";
 
 import {
   useTheme,
@@ -22,6 +25,7 @@ import {
   Fonts,
   BorderRadius,
   Shadows,
+  DeviceSize
 } from "../../theme/theme";
 
 /* =====================================================
@@ -39,6 +43,7 @@ const GuestHouseDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { colors, isDarkMode } = useTheme();
+  const { width } = useWindowDimensions();
 
   const { guestHouse } = route.params;
 
@@ -47,33 +52,28 @@ const GuestHouseDetail = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-       {/* ✅ STATUS BAR */}
-            <StatusBar
-              translucent={false}
-              backgroundColor={colors.background}
-              barStyle={isDarkMode ? "light-content" : "dark-content"}
-            />
-      <AppHeader title={'Guest House Details'}/>
-      {/* ================= HERO IMAGE ================= */}
-      <View style={styles.imageWrapper}>
-        <Image
-          source={{ uri: guestHouse.image }}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      </View>
-
+      {/* ✅ STATUS BAR */}
+      <StatusBar
+        translucent={false}
+        backgroundColor={colors.background}
+        barStyle={isDarkMode ? "light-content" : "dark-content"}
+      />
+      <AppHeader title={'Guest House Details'} />
       {/* ================= CONTENT ================= */}
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        <View style={styles.imageWrapper}>
+          <Image
+            source={{ uri: guestHouse.image }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        </View>
         {/* TITLE CARD */}
         <View
-          style={[
-            styles.card,
-            { backgroundColor: colors.cardBackground },
-          ]}
+          style={{ marginBottom: 10, }}
         >
           <Text
             style={[
@@ -95,75 +95,76 @@ const GuestHouseDetail = () => {
               {guestHouse.city}, {guestHouse.state}
             </Text>
           </View>
-        </View>
-
-        {/* DESCRIPTION */}
-        <View
-          style={[
-            styles.card,
-            { backgroundColor: colors.cardBackground },
-          ]}
-        >
-          <Text
-            style={[
-              styles.sectionTitle,
-              { color: colors.textPrimary },
-            ]}
-          >
-            About Guest House
-          </Text>
-
-          <Text
-            style={[
-              styles.description,
-              { color: colors.textSecondary },
-            ]}
-          >
-            {guestHouse.desp
-              ?.replace(/<[^>]+>/g, "")
-              ?.trim()}
-          </Text>
-        </View>
-
-        {/* CONTACT */}
-        <View
-          style={[
-            styles.card,
-            { backgroundColor: colors.cardBackground },
-          ]}
-        >
-          <Text
-            style={[
-              styles.sectionTitle,
-              { color: colors.textPrimary },
-            ]}
-          >
-            Contact Details
-          </Text>
-
-          <View style={styles.contactRow}>
-            <Phone size={18} color={colors.primary} />
+          <View>
             <Text
               style={[
                 styles.contactText,
+                { color: colors.textPrimary },
+              ]}
+            >
+              Address :- {guestHouse.address}
+            </Text>
+          </View>
+          <TouchableOpacity style={styles.contactRow} onPress={() => Linking.openURL(`tel:${guestHouse.contact_call}`)}>
+            <Phone size={18} color={colors.primary} />
+            <Text
+              style={[
+                styles.callText,
                 { color: colors.textPrimary },
               ]}
             >
               {guestHouse.contact_call}
             </Text>
-          </View>
+          </TouchableOpacity>
+        </View>
 
-          <View style={styles.contactRow}>
-            <MapPin size={18} color={colors.primary} />
-            <Text
-              style={[
-                styles.contactText,
-                { color: colors.textPrimary },
-              ]}
-            >
-              {guestHouse.address}
-            </Text>
-          </View>
+        {/* DESCRIPTION */}
+        <Text
+          style={[
+            styles.sectionTitle,
+            { color: colors.textPrimary },
+          ]}
+        >
+          About Guest House
+        </Text>
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.cardBackground },
+          ]}
+        >
+          <RenderHTML
+            contentWidth={width}
+            source={{ html: guestHouse.desp }}
+            baseStyle={{
+              color: colors.textPrimary,
+              fontSize: FontSizes.small,
+              backgroundColor: colors.cardBackground,
+              lineHeight: 20,
+            }}
+            tagsStyles={{
+              p: {
+                fontSize: FontSizes.small,
+                fontFamily: Fonts.quicksand.bold,
+                color: colors.textPrimary,
+                lineHeight: 22,
+              },
+              b: {
+                fontWeight: "800",
+              },
+              span: {
+                fontWeight: "500",
+                backgroundColor: colors.card,
+              },
+              strong: {
+                fontWeight: "900",
+              },
+              i: {
+                fontFamily: Fonts.quicksand.medium,
+              },
+              u: { textDecorationLine: "underline" },
+            }}
+          />
         </View>
       </ScrollView>
     </View>
@@ -184,12 +185,14 @@ const styles = StyleSheet.create({
   /* IMAGE */
   imageWrapper: {
     width,
-    height: IMAGE_HEIGHT,
+    height: DeviceSize.hp(25),
+    marginBottom: 10,
   },
 
   image: {
-    width: "100%",
+    width: "92%",
     height: "100%",
+    borderRadius: 10,
   },
 
   // overlay: {
@@ -218,12 +221,12 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.large,
     padding: Spacing.md,
     marginBottom: Spacing.md,
-    ...Shadows.small,
+    // ...Shadows.small,
   },
 
   title: {
     fontFamily: Fonts.quicksand.bold,
-    fontSize: FontSizes.large,
+    fontSize: FontSizes.normal,
     marginBottom: Spacing.xs,
   },
 
@@ -240,7 +243,7 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     fontFamily: Fonts.quicksand.bold,
-    fontSize: FontSizes.medium,
+    fontSize: FontSizes.small,
     marginBottom: Spacing.sm,
   },
 
@@ -253,11 +256,18 @@ const styles = StyleSheet.create({
   contactRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: Spacing.sm,
+    marginTop: Spacing.sm,
   },
 
   contactText: {
-    marginLeft: 10,
+    // marginLeft: 10,
+    fontFamily: Fonts.quicksand.medium,
+    fontSize: FontSizes.small,
+    marginTop: 5,
+    flex: 1,
+  },
+  callText: {
+    marginLeft: 6,
     fontFamily: Fonts.quicksand.medium,
     fontSize: FontSizes.small,
     flex: 1,

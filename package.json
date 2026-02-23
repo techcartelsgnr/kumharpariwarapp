@@ -1,13 +1,14 @@
 {
   "name": "kumharpariwar",
-  "version": "0.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "release": "node scripts/release.js"
   },
   "dependencies": {
     "@notifee/react-native": "^9.1.8",
