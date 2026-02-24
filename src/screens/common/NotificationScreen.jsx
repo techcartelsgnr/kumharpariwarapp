@@ -15,6 +15,7 @@ import { fetchNotifications } from "../../redux/slices/commonSlice";
 import AppHeader from "../../components/AppHeader";
 import EmptyState from "../../components/EmptyState";
 import { useTheme, Fonts, FontSizes } from "../../theme/theme";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const NotificationScreen = () => {
   const dispatch = useDispatch();
@@ -76,7 +77,7 @@ const NotificationScreen = () => {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader title="Notifications" />
 
       {notificationsLoading && !pending && (
@@ -110,7 +111,7 @@ const NotificationScreen = () => {
           }
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -14,6 +14,7 @@ import AppHeader from "../../components/AppHeader";
 import EmptyState from "../../components/EmptyState";
 import { useSelector, useDispatch } from "react-redux";
 import mainServices from "../../redux/services/mainServices";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // ✅ THEME IMPORTS (as you asked)
 import {
@@ -116,7 +117,7 @@ const HostelScreen = () => {
     );
 
     return (
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
             <AppHeader title="Hostels" />
             {loading && (
                 <ActivityIndicator
@@ -150,7 +151,7 @@ const HostelScreen = () => {
                     }
                 />
             )}
-        </View>
+        </SafeAreaView>
     );
 };
 

@@ -16,6 +16,7 @@ import { Briefcase, MapPin, Search, Phone, MessageCircle } from "lucide-react-na
 
 import AppHeader from "../../components/AppHeader";
 import EmptyState from "../../components/EmptyState";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
   useTheme,
@@ -128,7 +129,7 @@ export default function ContactSearch() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader title="Search Contact" />
 
       <View style={styles.filterWrapper}>
@@ -149,10 +150,22 @@ export default function ContactSearch() {
           renderLeftIcon={() => (
             <Briefcase size={18} color={colors.textSecondary} style={{ marginRight: 5 }} />
           )}
-          placeholderStyle={styles.placeholder}
-          selectedTextStyle={styles.selectedText}
-          itemTextStyle={styles.itemText}
-          itemContainerStyle={styles.itemContainer}
+          itemContainerStyle={{ backgroundColor: colors.surface }}
+          placeholderStyle={{
+            fontFamily: Fonts.quicksand.bold,
+            fontSize: FontSizes.small,
+            color: colors.textTertiary,
+          }}
+          selectedTextStyle={{
+            fontFamily: Fonts.quicksand.bold,
+            fontSize: FontSizes.small,
+            color: colors.textPrimary,
+          }}
+          itemTextStyle={{
+            fontFamily: Fonts.quicksand.bold,
+            fontSize: FontSizes.small,
+            color: colors.textPrimary,
+          }}
         />
 
         {/* CITY */}
@@ -173,10 +186,22 @@ export default function ContactSearch() {
           renderLeftIcon={() => (
             <MapPin size={18} color={colors.textSecondary} style={{ marginRight: 5 }} />
           )}
-          placeholderStyle={styles.placeholder}
-          selectedTextStyle={styles.selectedText}
-          itemTextStyle={styles.itemText}
-          itemContainerStyle={styles.itemContainer}
+         itemContainerStyle={{ backgroundColor: colors.surface }}
+          placeholderStyle={{
+            fontFamily: Fonts.quicksand.bold,
+            fontSize: FontSizes.small,
+            color: colors.textTertiary,
+          }}
+          selectedTextStyle={{
+            fontFamily: Fonts.quicksand.bold,
+            fontSize: FontSizes.small,
+            color: colors.textPrimary,
+          }}
+          itemTextStyle={{
+            fontFamily: Fonts.quicksand.bold,
+            fontSize: FontSizes.small,
+            color: colors.textPrimary,
+          }}
         />
 
 
@@ -289,7 +314,7 @@ export default function ContactSearch() {
           }
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

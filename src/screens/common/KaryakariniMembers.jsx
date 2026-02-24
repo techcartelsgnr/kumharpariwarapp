@@ -27,7 +27,6 @@ import { fetchKaryakariniMembers } from '../../redux/slices/mainSlice';
 const KaryakariniMembers = ({ route }) => {
     const { colors, isDarkMode } = useTheme();
     const dispatch = useDispatch();
-
     const { token } = useSelector(state => state.auth);
     const [refreshing, setRefreshing] = useState(false);
 

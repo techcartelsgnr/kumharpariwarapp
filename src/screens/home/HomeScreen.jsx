@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Header from "../../components/Header";
 import BasicSlider from "../../components/Slider";
 import BusinessCategory from "../business/BusinessCategory";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Download, Share2 } from "lucide-react-native";
 
@@ -169,7 +170,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar
         barStyle={isDarkMode ? "light-content" : "dark-content"}
         backgroundColor={colors.background}
@@ -277,7 +278,7 @@ export default function HomeScreen({ navigation }) {
         </View>
 
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

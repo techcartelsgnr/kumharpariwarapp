@@ -28,6 +28,8 @@ const InputAuthField = ({
   onRightIconPress,
   maxLength,
   required = false,     // 🔹 for *
+  error,
+  editable = true,
 }) => {
   const { colors, isDarkMode } = useTheme();
 
@@ -53,10 +55,12 @@ const InputAuthField = ({
         style={[
           styles.container,
           {
-            backgroundColor: isDarkMode
-              ? colors.surface
-              : colors.cardBackground,
-            borderColor: colors.divider,
+            backgroundColor: editable
+              ? (isDarkMode ? colors.surface : colors.cardBackground)
+              : colors.divider,     // ✅ DIFFERENT BG
+            borderColor: error
+              ? colors.error
+              : colors.divider,
           },
         ]}
       >
@@ -82,6 +86,7 @@ const InputAuthField = ({
           keyboardType={keyboardType}
           secureTextEntry={isSecure}
           onChangeText={onChangeText}
+          editable={editable}
           maxLength={maxLength}
           value={value}
           style={[
@@ -101,6 +106,11 @@ const InputAuthField = ({
           </TouchableOpacity>
         )}
       </View>
+      {error && (
+        <Text style={[styles.errorText]}>
+          {error}
+        </Text>
+      )}
     </View>
   );
 };
@@ -149,5 +159,11 @@ const styles = StyleSheet.create({
 
   iconWrapper: {
     paddingLeft: 10,
+  },
+  errorText: {
+    marginTop: 4,
+    color: '#E74C3C',
+    fontSize: FontSizes.xsmall,
+    fontFamily: Fonts.quicksand.medium,
   },
 });

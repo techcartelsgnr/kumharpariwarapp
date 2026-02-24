@@ -83,8 +83,8 @@ android {
         applicationId "com.kumharpariwar"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 7
+        versionName "1.0.3"
     }
      signingConfigs {
         release {

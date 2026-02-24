@@ -26,6 +26,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from '../../redux/slices/authSlice';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import AppHeader from "../../components/AppHeader";
 
@@ -58,7 +59,7 @@ const ProfileScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       {/* ✅ STATUS BAR */}
       <StatusBar
         translucent={false}
@@ -229,7 +230,7 @@ const ProfileScreen = () => {
           </Text>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -13,6 +13,7 @@ import {
 import AppHeader from "../../components/AppHeader";
 import { useTheme, FontSizes, BorderRadius, Fonts, DeviceSize, Spacing } from "../../theme/theme";
 import RenderHTML from "react-native-render-html";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 /* =====================================================
@@ -42,7 +43,7 @@ export default function PostDetail({ route }) {
   }, []);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar barStyle="dark-content" />
 
       {/* ✅ Header */}
@@ -139,7 +140,7 @@ export default function PostDetail({ route }) {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

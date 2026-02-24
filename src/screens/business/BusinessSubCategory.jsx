@@ -9,6 +9,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import AppHeader from "../../components/AppHeader";
 import PaginatedList from "../../components/PaginatedList";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
   useTheme,
@@ -83,7 +84,7 @@ const BusinessSubCategory = ({ route, navigation }) => {
   );
 
   return (
-    <View
+    <SafeAreaView
       style={[
         styles.container,
         { backgroundColor: colors.background },
@@ -100,7 +101,7 @@ const BusinessSubCategory = ({ route, navigation }) => {
         pageSize={10}
         emptyTitle="No sub categories found"
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

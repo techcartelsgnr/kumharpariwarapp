@@ -22,6 +22,8 @@ import {
   Spacing,
 } from "../../theme/theme";
 
+import { SafeAreaView } from "react-native-safe-area-context";
+
 export default function TermScreen() {
   const dispatch = useDispatch();
   const { colors } = useTheme();
@@ -47,7 +49,7 @@ export default function TermScreen() {
   };
 
   return (
-    <View
+    <SafeAreaView
       style={[
         styles.container,
         { backgroundColor: colors.background },
@@ -119,7 +121,7 @@ export default function TermScreen() {
           />
         </ScrollView>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

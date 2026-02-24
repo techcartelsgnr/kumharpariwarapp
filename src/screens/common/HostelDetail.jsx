@@ -20,6 +20,7 @@ import { fetchHostelById } from "../../redux/slices/mainSlice";
 import AppHeader from "../../components/AppHeader";
 import { useTheme, FontSizes, BorderRadius, Fonts } from "../../theme/theme";
 import RenderHTML from "react-native-render-html";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const HostelDetail = ({ route }) => {
     const dispatch = useDispatch();
@@ -93,7 +94,7 @@ const HostelDetail = ({ route }) => {
     }
 
     return (
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
             <StatusBar barStyle="dark-content" />
 
             {/* ✅ Header */}
@@ -236,7 +237,7 @@ const HostelDetail = ({ route }) => {
                     </View>
                 </View>
             </ScrollView>
-        </View>
+        </SafeAreaView>
     );
 };
 

@@ -51,7 +51,7 @@ const GuestHouseDetail = () => {
     Platform.OS === "android" ? StatusBar.currentHeight || 0 : 44;
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       {/* ✅ STATUS BAR */}
       <StatusBar
         translucent={false}
@@ -167,7 +167,7 @@ const GuestHouseDetail = () => {
           />
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

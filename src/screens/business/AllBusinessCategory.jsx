@@ -7,6 +7,7 @@ import AppHeader from "../../components/AppHeader";
 import BusinessCategory from "./BusinessCategory";
 import { fetchBusinessCategories } from "../../redux/slices/mainSlice";
 
+
 import { useTheme } from "../../theme/theme";
 
 export default function AllBusinessCategory({ navigation }) {

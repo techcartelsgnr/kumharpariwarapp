@@ -150,7 +150,7 @@ const LoginScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.forgotWrapper}
           activeOpacity={0.7}
-          onPress={() => { }}
+          onPress={() => navigation.navigate("ForgotScreen")}
         >
           <Lock size={14} color={colors.primary} />
           <Text style={[styles.forgotText, { color: colors.primary }]}>

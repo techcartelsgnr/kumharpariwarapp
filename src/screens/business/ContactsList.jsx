@@ -13,6 +13,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import AppHeader from "../../components/AppHeader";
 import EmptyState from "../../components/EmptyState";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
   useTheme,
@@ -146,7 +147,7 @@ const ContactsList = ({ route }) => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       {/* HEADER */}
       <AppHeader title={subCategory?.title || "Contacts"} />
 
@@ -242,7 +243,7 @@ const ContactsList = ({ route }) => {
         {/* PAGINATION */}
         {renderPagination()}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

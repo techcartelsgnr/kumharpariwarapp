@@ -15,6 +15,7 @@ import AppHeader from "../../components/AppHeader";
 import { fetchAbout } from "../../redux/slices/commonSlice";
 import RenderHTML from "react-native-render-html";
 import EmptyState from "../../components/EmptyState";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
   useTheme,
@@ -49,7 +50,7 @@ export default function AboutScreen() {
   };
 
   return (
-    <View
+    <SafeAreaView
       style={[
         styles.container,
         { backgroundColor: colors.background },
@@ -133,7 +134,7 @@ export default function AboutScreen() {
           )}
         </ScrollView>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -16,6 +16,7 @@ import { fetchNews } from "../../redux/slices/mainSlice";
 
 import AppHeader from "../../components/AppHeader";
 import EmptyState from "../../components/EmptyState";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme, DeviceSize } from "../../theme/theme";
 import { useNavigation } from "@react-navigation/native";
 
@@ -62,7 +63,7 @@ export default function PostScreen() {
   }
 
   return (
-    <View
+    <SafeAreaView
       style={[
         styles.container,
         { backgroundColor: colors.background },
@@ -126,7 +127,7 @@ export default function PostScreen() {
           )
         }
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
