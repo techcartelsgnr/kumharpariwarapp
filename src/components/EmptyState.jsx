@@ -11,6 +11,7 @@ import {
   FontSizes,
   DeviceSize,
   useTheme,
+  Fonts,
 } from "../theme/theme";
 
 
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
 
   text: {
     fontSize: FontSizes.small,
+    fontFamily: Fonts.quicksand.bold,
     textAlign: "center",
   },
 });

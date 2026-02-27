@@ -159,6 +159,76 @@ export const fetchAbout = createAsyncThunk(
   }
 );
 
+
+// ===============================
+// 📸 Fetch My Contacts
+// ===============================
+export const fetchMyContacts = createAsyncThunk(
+  "common/fetchMyContacts",
+  async ({ token, page }, { rejectWithValue }) => {
+    try {
+      return await commanServices.getContacts({ token, page });
+    } catch (error) {
+      return rejectWithValue(
+        error?.message || "Failed to load contacts"
+      );
+    }
+  }
+);
+
+
+export const fetchNewsByUserSlice = createAsyncThunk(
+  "common/fetchNewsByUser",
+  async ({ token, page }, { rejectWithValue }) => {
+    try {
+      return await commanServices.getNewsAddedByUser({ token, page });
+    } catch (error) {
+      return rejectWithValue(
+        error?.message || "Failed to load news"
+      );
+    }
+  }
+);
+
+export const deleteNewsByUserSlice = createAsyncThunk(
+  "common/deleteNewsByUser",
+  async ({ token, news_id }, { rejectWithValue }) => {
+    try {
+      return await commanServices.deleteNewsByUser({ token, news_id });
+    } catch (e) {
+      const message =
+        e?.response?.data?.message ||
+        e.message ||
+        "Failed to delete news";
+
+      return rejectWithValue(message);
+    }
+  }
+);
+
+
+export const updateNewsByUserSlice = createAsyncThunk(
+  "common/updateNewsByUser",
+  async ({ token, news_id, title, desp, image }, { rejectWithValue }) => {
+    try {
+      return await commanServices.updateNewsByUser({
+        token,
+        news_id,
+        title,
+        desp,
+        image,
+      });
+    } catch (e) {
+      const message =
+        e?.response?.data?.message ||
+        e.message ||
+        "Failed to update news";
+
+      return rejectWithValue(message);
+    }
+  }
+);
+
 // 🔥 MAIN COMMON SLICE
 const commonSlice = createSlice({
   name: "common",
@@ -212,6 +282,30 @@ const commonSlice = createSlice({
     aboutus: null,
     aboutusLoading: false,
     aboutusError: null,
+    // get my contacts
+    contacts: [],
+    contactsLoading: false,
+    contactsError: null,
+    contactsPagination: {
+      currentPage: 1,
+      total: 0,
+      perPage: 0,
+    },
+    // get news by users
+    news: [],
+    newsLoading: false,
+    newsError: null,
+    newsPagination: {
+      currentPage: 1,
+      lastPage: 1,
+      nextPage: null,
+    },
+    // new delete
+    deleteNewsLoading: false,
+    deleteNewsError: null,
+    // update new
+    updateNewsLoading: false,
+    updateNewsError: null,
 
   },
   reducers: {
@@ -395,6 +489,131 @@ const commonSlice = createSlice({
         state.aboutusLoading = false;
         state.aboutusError = action.payload;
       });
+
+    /* ------------------ MY CONTACTS ------------------ */
+    builder.addCase(fetchMyContacts.pending, (state) => {
+      state.contactsLoading = true;
+      state.contactsError = null;
+    })
+
+    builder.addCase(fetchMyContacts.fulfilled, (state, action) => {
+      state.contactsLoading = false;
+
+      const requestedPage = action.meta.arg.page;
+
+      if (requestedPage === 1) {
+        // ✅ RESET LIST on refresh / first load
+        state.contacts = action.payload.contacts;
+      } else {
+        // ✅ APPEND for pagination
+        state.contacts = [
+          ...state.contacts,
+          ...action.payload.contacts,
+        ];
+      }
+
+      state.contactsPagination = action.payload.pagination;
+    });
+
+    builder.addCase(fetchMyContacts.rejected, (state, action) => {
+      state.contactsLoading = false;
+      state.contactsError = action.payload;
+    });
+
+    /* ------------------ NEWS BY USER ------------------ */
+    builder.addCase(fetchNewsByUserSlice.pending, (state) => {
+      state.newsLoading = true;
+      state.newsError = null;
+    });
+
+    builder.addCase(fetchNewsByUserSlice.fulfilled, (state, action) => {
+      state.newsLoading = false;
+
+      const requestedPage = action.meta.arg.page;
+
+      if (requestedPage === 1) {
+        // ✅ Reset on refresh / first page
+        state.news = action.payload.news;
+      } else {
+        // ✅ Append for pagination
+        state.news = [
+          ...state.news,
+          ...action.payload.news,
+        ];
+      }
+
+      state.newsPagination = action.payload.pagination;
+    });
+
+    builder.addCase(fetchNewsByUserSlice.rejected, (state, action) => {
+      state.newsLoading = false;
+      state.newsError = action.payload;
+    });
+
+
+    /* ------------------ DELETE NEWS ------------------ */
+    builder.addCase(deleteNewsByUserSlice.pending, (state) => {
+      state.deleteNewsLoading = true;
+      state.deleteNewsError = null;
+    });
+
+    builder.addCase(deleteNewsByUserSlice.fulfilled, (state, action) => {
+      state.deleteNewsLoading = false;
+
+      const deletedId = action.meta.arg.news_id;
+
+      // ✅ Remove from UI instantly
+      state.news = state.news.filter(item => item.id !== deletedId);
+
+      if (action.payload?.message) {
+        commanServices.showToast(action.payload.message);
+      }
+    });
+
+    builder.addCase(deleteNewsByUserSlice.rejected, (state, action) => {
+      state.deleteNewsLoading = false;
+      state.deleteNewsError = action.payload;
+
+      if (action.payload) {
+        commanServices.showToast(action.payload);
+      }
+    });
+    /* ------------------ UPDATE NEWS ------------------ */
+    builder.addCase(updateNewsByUserSlice.pending, (state) => {
+      state.updateNewsLoading = true;
+      state.updateNewsError = null;
+    });
+
+    builder.addCase(updateNewsByUserSlice.fulfilled, (state, action) => {
+      state.updateNewsLoading = false;
+
+      const updatedId = action.meta.arg.news_id;
+
+      // ✅ Update item inside list (NO REFRESH NEEDED ⚡)
+      state.news = state.news.map(item =>
+        item.id === updatedId
+          ? {
+            ...item,
+            title: action.meta.arg.title,
+            desp: action.meta.arg.desp,
+            image: action.meta.arg.image?.uri || item.image,
+          }
+          : item
+      );
+
+      if (action.payload?.message) {
+        commanServices.showToast(action.payload.message);
+      }
+    });
+
+    builder.addCase(updateNewsByUserSlice.rejected, (state, action) => {
+      state.updateNewsLoading = false;
+      state.updateNewsError = action.payload;
+
+      if (action.payload) {
+        commanServices.showToast(action.payload);
+      }
+    });
 
 
   },

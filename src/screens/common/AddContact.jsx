@@ -19,9 +19,11 @@ import InputAuthField from "../../components/InputAuthField";
 import ButtonWithLoader from "../../components/ButtonWithLoader";
 import commanServices from "../../redux/services/commanServices";
 
+
 import {
   fetchBusinessCategories,
   fetchBusinessSubCategories,
+  fetchCities,
 } from "../../redux/slices/mainSlice";
 
 import {
@@ -36,16 +38,9 @@ import {
    STATIC OPTIONS
 ================================ */
 const genderOptions = [
-  { label: "Male", value: "Male" },
-  { label: "Female", value: "Female" },
-  { label: "Other", value: "Other" },
-];
-
-const cityOptions = [
-  { label: "Jaipur", value: "Jaipur" },
-  { label: "Jodhpur", value: "Jodhpur" },
-  { label: "Udaipur", value: "Udaipur" },
-  { label: "Bikaner", value: "Bikaner" },
+  { label: "Male", value: "0" },
+  { label: "Female", value: "1" },
+  { label: "Other", value: "2" },
 ];
 
 const AddContact = () => {
@@ -57,6 +52,7 @@ const AddContact = () => {
   const {
     businessCategories,
     businessSubCategories,
+    cities,
     loadingCategories,
     loadingSubCategories,
   } = useSelector(state => state.main);
@@ -82,6 +78,7 @@ const AddContact = () => {
   useEffect(() => {
     if (token) {
       dispatch(fetchBusinessCategories(token));
+      dispatch(fetchCities({ token }));   // ✅ ADD THIS
     }
   }, [dispatch, token]);
 
@@ -106,6 +103,17 @@ const AddContact = () => {
     [businessSubCategories]
   );
 
+  const cityOptions = useMemo(
+    () =>
+      cities.map(item => ({
+        label: item.label,   // ✅ already mapped
+        value: item.id,      // ✅ STORE ID
+      })),
+    [cities]
+  );
+
+
+
   /* ===============================
      IMAGE PICK
   =============================== */
@@ -126,12 +134,28 @@ const AddContact = () => {
   /* ===============================
      VALIDATION
   =============================== */
+  // const validate = () => {
+  //   const e = {};
+  //   Object.keys(form).forEach(key => {
+  //     if (!form[key]) e[key] = `${key} is required`;
+  //   });
+  //   if (!imageMeta) e.image = "Image is required";
+
+  //   setErrors(e);
+  //   return Object.keys(e).length === 0;
+  // };
+
   const validate = () => {
     const e = {};
-    Object.keys(form).forEach(key => {
-      if (!form[key]) e[key] = `${key} is required`;
-    });
-    if (!imageMeta) e.image = "Image is required";
+
+    if (!form.name.trim()) e.name = "Name is required";
+    if (form.mobile.length !== 10) e.mobile = "Valid mobile required";
+    if (form.gender === "") e.gender = "Gender required";   // ✅ FIXED
+    if (!form.location) e.location = "City required";
+    if (!form.category) e.category = "Category required";
+    if (!form.subcategory) e.subcategory = "Subcategory required";
+    if (!form.designation.trim()) e.designation = "Designation required";
+    if (!imageMeta) e.image = "Image required";
 
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -267,16 +291,17 @@ const AddContact = () => {
           error: errors.gender,
         })} */}
 
-        {/* {renderDropdown({
+        {renderDropdown({
           label: "City",
-          data: cityOptions,
+          data: cityOptions,          // ✅ USE MAPPED DATA
           value: form.location,
           placeholder: "Select City",
-          onChange: v => setForm(prev => ({ ...prev, location: v })),
+          onChange: v =>
+            setForm(prev => ({ ...prev, location: v })),  // ✅ STORES ID
           error: errors.location,
-        })} */}
+        })}
 
-        <InputAuthField
+        {/* <InputAuthField
           label="City"
           placeholder="Enter city"
           value={form.location}
@@ -289,7 +314,7 @@ const AddContact = () => {
         />
         {errors.location && (
           <Text style={styles.error}>{errors.location}</Text>
-        )}
+        )} */}
 
         {renderDropdown({
           label: "Business Category",

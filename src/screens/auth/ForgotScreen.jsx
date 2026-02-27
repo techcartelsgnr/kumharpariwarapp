@@ -11,7 +11,7 @@ import {
   Platform,
 } from "react-native";
 
-import { Phone, ShieldCheck } from "lucide-react-native";
+import { Phone, ShieldCheck, ArrowLeft } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -24,9 +24,9 @@ import {
   Fonts,
   Spacing,
   BorderRadius,
+  DeviceSize,
 } from "../../theme/theme";
 
-import commanServices from "../../redux/services/commanServices";
 import { ResendOtp } from "../../redux/slices/authSlice";
 
 export default function ForgotScreen() {
@@ -111,13 +111,24 @@ export default function ForgotScreen() {
       />
 
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}>
-        
+        <View style={styles.topBar}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            activeOpacity={0.7}
+            style={[
+              styles.backButton,
+              { backgroundColor: colors.cardBackground }
+            ]}
+          >
+            <ArrowLeft size={20} color={colors.textPrimary} />
+          </TouchableOpacity>
+        </View>
         {/* LOGO */}
         <View style={styles.logoWrapper}>
           <View
             style={[
               styles.logoCircle,
-              { backgroundColor: colors.cardBackground },
+              // { backgroundColor: colors.cardBackground },
             ]}
           >
             <Image
@@ -193,8 +204,8 @@ export default function ForgotScreen() {
                   {on && remainingTime > 0
                     ? `${remainingTime}s`
                     : on
-                    ? "Resend OTP"
-                    : "Get OTP"}
+                      ? "Resend OTP"
+                      : "Get OTP"}
                 </Text>
               </TouchableOpacity>
             }
@@ -233,10 +244,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: Spacing.xl,
   },
+  topBar: {
+    position: "absolute",
+    top: Platform.OS === "ios" ? 70 : 65,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+  },
+
+  backButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 4,
+  },
 
   logoCircle: {
-    width: 90,
-    height: 90,
+    width: DeviceSize.hp(20),
+    height: DeviceSize.hp(15),
     borderRadius: 45,
     alignItems: "center",
     justifyContent: "center",
@@ -244,8 +271,8 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 60,
-    height: 60,
+    width: DeviceSize.hp(14),
+    height: DeviceSize.hp(14),
     resizeMode: "contain",
   },
 

@@ -84,8 +84,6 @@ const getThoughtOfTheDay = async (token) => {
   }
 };
 
-
-
 // ================================
 // 📌 Get Our Proud Members (AUTH)
 // ================================
@@ -133,37 +131,6 @@ const getOurProud = async (token) => {
   }
 };
 
-
-
-
-// const getSchoolGallery = async (token) => {
-//   try {
-//     const res = await authAxios.get("/school-gallery", {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Accept: "application/json",
-//         Authorization: "Bearer " + token, // 🔥 REQUIRED
-//       },
-//     });
-//     // Correct array from backend
-//     const galleryList = res.data.data || [];
-//     console.log("Gallery List From API:", galleryList);
-//     // Convert to clean format for UI
-//     const images = galleryList.map((item) => ({
-//       id: item.id,
-//       img: item.image_url,  // Full image URL from API
-//     }));
-
-//     return { images };
-
-//   } catch (error) {
-//     console.log("Gallery API Error:", error);
-//     return { images: [] };
-//   }
-// };
-
-
-
 // ================================
 // 📌 Get Notifications
 // ================================
@@ -195,9 +162,6 @@ const getNotifications = async (token) => {
     };
   }
 };
-
-
-
 
 /* ===============================
    Add News by User
@@ -263,10 +227,9 @@ const addContact = async ({
   formData.append("subcategory", subcategory);
   formData.append("mobile", mobile);
   formData.append("designation", designation);
-  // formData.append("location", location);
-  // formData.append("gender", gender);
-  formData.append("gender", String(gender));
-formData.append("location", String(location));
+  formData.append("location", location);
+  formData.append("gender", gender);
+  
 
   if (image?.uri) {
     formData.append("image", {
@@ -308,6 +271,7 @@ formData.append("location", String(location));
 
   return response.data;
 };
+
 
 
 /* ===============================
@@ -363,9 +327,156 @@ const getAbout = async ({ token }) => {
   return res.data; 
 };
 
+/* ===============================
+   📇 Get My Contacts (AUTH)
+================================ */
+const getContacts = async ({ token, page }) => {
+  console.log("📄 Fetch Contacts Page:", page);
 
+  const res = await authAxios.get(`/my_contacts?users=${page}`, {
+    headers: {
+      Accept: "application/json",
+      Authorization: "Bearer " + token,
+    },
+  });
 
+  console.log("✅ Contacts Raw Response:", res.data);
 
+  const mycontact = res?.data?.data?.mycontact;
+
+  return {
+    contacts: mycontact?.data || [],
+    pagination: {
+      currentPage: mycontact?.current_page || 1,
+      lastPage: mycontact?.last_page || 1,
+      nextPage: mycontact?.next_page_url,
+    },
+  };
+};
+
+/* ===============================
+   📰 Get News Added By User (AUTH)
+================================ */
+const getNewsAddedByUser = async ({ token, page }) => {
+  console.log("📄 Fetch News Page:", page);
+
+  try {
+    const res = await authAxios.get(`/news_added_by_user?users=${page}`, {
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    console.log("✅ News Raw Response:", res.data);
+
+    const newsData = res?.data?.data?.news;
+
+    return {
+      news: newsData?.data || [],
+      pagination: {
+        currentPage: newsData?.current_page || 1,
+        lastPage: newsData?.last_page || 1,
+        nextPage: newsData?.next_page_url,
+      },
+    };
+  } catch (error) {
+    console.log(
+      "News API Error:",
+      error?.response?.data || error.message
+    );
+
+    return {
+      news: [],
+      pagination: {
+        currentPage: 1,
+        lastPage: 1,
+        nextPage: null,
+      },
+    };
+  }
+};
+
+/* ===============================
+   🗑 Delete News By User (AUTH)
+================================ */
+const deleteNewsByUser = async ({ token, news_id }) => {
+  console.log("🗑 Delete News ID:", news_id);
+
+  try {
+    const res = await authAxios.post(
+      "/deletenews_by_user",
+      { news_id },
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+
+    console.log("✅ Delete News Response:", res.data);
+
+    return res.data;
+  } catch (error) {
+    console.log(
+      "Delete News API Error:",
+      error?.response?.data || error.message
+    );
+
+    throw error; // ✅ Important for slice rejectWithValue
+  }
+};
+
+/* ===============================
+   ✏ Update News By User (AUTH)
+================================ */
+const updateNewsByUser = async ({ token, title, desp, image, news_id }) => {
+  const formData = new FormData();
+
+  formData.append("news_id", news_id);
+  formData.append("title", title);
+  formData.append("desp", desp);
+
+  if (image?.uri) {
+    formData.append("image", {
+      uri:
+        Platform.OS === "ios"
+          ? image.uri.replace("file://", "")
+          : image.uri,
+      type: image.type || "image/jpeg",
+      name: image.name || `news_${Date.now()}.jpg`,
+    });
+  }
+
+  console.log("✏ Update News Payload:");
+  console.log({ news_id, title, desp, image });
+
+  try {
+    const res = await authAxios.post(
+      "/updatenews_by_user",
+      formData,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + token,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    console.log("✅ Update News Response:", res.data);
+
+    return res.data;
+  } catch (error) {
+    console.log(
+      "Update News API Error:",
+      error?.response?.data || error.message
+    );
+
+    throw error; // ✅ Important for rejectWithValue
+  }
+};
 
 
 const showToast = Message => {
@@ -387,6 +498,10 @@ const commanServices = {
   getGallery,
   getTerms,
   getAbout,
+  getContacts,
+  getNewsAddedByUser,
+  deleteNewsByUser,
+  updateNewsByUser
  
 };
 export default commanServices;

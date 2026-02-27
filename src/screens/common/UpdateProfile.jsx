@@ -11,13 +11,14 @@ import {
 } from "react-native";
 
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { Phone, User, Mail } from "lucide-react-native";
+import { Phone, User, Mail, Pencil } from "lucide-react-native";
 import * as ImagePicker from "react-native-image-picker";
 
 import { useDispatch, useSelector } from "react-redux";
 
 import InputAuthField from "../../components/InputAuthField";
 import ButtonWithLoader from "../../components/ButtonWithLoader";
+import AppHeader from "../../components/AppHeader";
 
 import {
   useTheme,
@@ -40,7 +41,7 @@ export default function UpdateProfile() {
   const { colors, isDarkMode } = useTheme();
 
   /* ✅ CORRECT SELECTOR */
-  const { token, mobile, name, email, pending } = useSelector(
+  const { token, mobile, name, email, pending, image } = useSelector(
     (state) => state.auth
   );
 
@@ -169,7 +170,7 @@ export default function UpdateProfile() {
         setGotra(user.gotra || "");
         setStateValue(user.state || "");
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useFocusEffect(
@@ -180,20 +181,21 @@ export default function UpdateProfile() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-    <KeyboardAvoidingView>
-      <StatusBar
-        backgroundColor={colors.background}
-        barStyle={isDarkMode ? "light-content" : "dark-content"}
-      />
+      <KeyboardAvoidingView>
+        <StatusBar
+          backgroundColor={colors.background}
+          barStyle={isDarkMode ? "light-content" : "dark-content"}
+        />
+        {/* HEADER */}
+        <AppHeader title="Update Profile" />
+        <ScrollView contentContainerStyle={{ padding: Spacing.lg }}>
 
-      <ScrollView contentContainerStyle={{ padding: Spacing.lg }}>
-        
-        {/* PROFILE IMAGE */}
-        <View style={styles.profile}>
-          <TouchableOpacity onPress={handleImagePick}>
+          {/* PROFILE IMAGE */}
+          <View style={styles.profile}>
+            {/* <TouchableOpacity onPress={handleImagePick}>
             <View style={styles.avatarWrapper}>
               {imageUri ? (
-                <Image source={{ uri: imageUri }} style={styles.avatar} />
+                <Image source={{ uri: imageUri || image }} style={styles.avatar} />
               ) : (
                 <View
                   style={[
@@ -203,101 +205,171 @@ export default function UpdateProfile() {
                 />
               )}
             </View>
-          </TouchableOpacity>
-        </View>
+          </TouchableOpacity> */}
+            <View>
+              <View style={styles.avatarWrapper}>
+                {imageUri ? (
+                  /* ✅ NEWLY PICKED IMAGE (PREVIEW) */
+                  <Image source={{ uri: imageUri }} style={styles.avatar} />
+                ) : image ? (
+                  /* ✅ REDUX PROFILE IMAGE */
+                  <Image source={{ uri: image }} style={styles.avatar} />
+                ) : (
+                  /* ✅ FALLBACK */
+                  <View
+                    style={[
+                      styles.avatar,
+                      { backgroundColor: colors.surface },
+                    ]}
+                  />
+                )}
 
-        {/* READ ONLY FIELDS */}
-        <InputAuthField
-          label="Name"
-          value={name}
-          icon={<User size={18} color={colors.textSecondary} />}
-          editable={false}
-        />
+                <TouchableOpacity
+                  style={[
+                    styles.editButton,
+                    { backgroundColor: colors.primary },
+                  ]}
+                  onPress={handleImagePick}
+                >
+                  <Pencil size={14} color="#fff" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
 
-        <InputAuthField
-          label="Email"
-          value={email}
-          icon={<Mail size={18} color={colors.textSecondary} />}
-          editable={false}
-        />
+          {/* READ ONLY FIELDS */}
+          <InputAuthField
+            label="Name"
+            value={name}
+            icon={<User size={18} color={colors.textSecondary} />}
+            editable={false}
+          />
 
-        <InputAuthField
-          label="Mobile"
-          value={mobile}
-          icon={<Phone size={18} color={colors.textSecondary} />}
-          editable={false}
-        />
+          <InputAuthField
+            label="Email"
+            value={email}
+            icon={<Mail size={18} color={colors.textSecondary} />}
+            editable={false}
+          />
 
-         {/* STATE */}
-        <Dropdown
-          style={[
-            styles.dropdown,
-            { backgroundColor: colors.cardBackground },
-          ]}
-          data={[{ label: "Rajasthan", value: "Rajasthan" }]}
-          labelField="label"
-          valueField="value"
-          placeholder="Select State"
-          value={stateValue}
-          onChange={(item) => {
-            setStateValue(item.value);
-            setStateError("");
-          }}
-        />
-        {stateError ? <Text style={styles.error}>{stateError}</Text> : null}
+          <InputAuthField
+            label="Mobile"
+            value={mobile}
+            icon={<Phone size={18} color={colors.textSecondary} />}
+            editable={false}
+          />
 
-        {/* CITY */}
-        <Dropdown
-          style={[
-            styles.dropdown,
-            { backgroundColor: colors.cardBackground },
-          ]}
-          data={cityOptions}
-          labelField="label"
-          valueField="value"
-          placeholder="Select City"
-          value={city}
-          onChange={(item) => {
-            setCity(item.value);
-            setCityError("");
-          }}
-        />
-        {cityError ? <Text style={styles.error}>{cityError}</Text> : null}
+          {/* STATE */}
+          <Dropdown
+            style={[
+              styles.dropdown,
+              { backgroundColor: colors.cardBackground },
+            ]}
+            data={[{ label: "Rajasthan", value: "Rajasthan" }]}
+            labelField="label"
+            valueField="value"
+            placeholder="Select State"
+            value={stateValue}
+            onChange={(item) => {
+              setStateValue(item.value);
+              setStateError("");
+            }}
+            containerStyle={{
+              backgroundColor: colors.surface,
+              borderRadius: BorderRadius.large,
+              borderColor: colors.divider,
+              borderWidth: 1,
+            }}
+            placeholderStyle={{
+              fontFamily: Fonts.quicksand.bold,
+              fontSize: FontSizes.small,
+              color: colors.textTertiary,
+            }}
+            selectedTextStyle={{
+              fontFamily: Fonts.quicksand.bold,
+              fontSize: FontSizes.small,
+              color: colors.textPrimary,
+            }}
+            itemTextStyle={{
+              fontFamily: Fonts.quicksand.bold,
+              fontSize: FontSizes.small,
+              color: colors.textPrimary,
+            }}
+          />
+          {stateError ? <Text style={styles.error}>{stateError}</Text> : null}
 
-       
+          {/* CITY */}
+          <Dropdown
+            style={[
+              styles.dropdown,
+              { backgroundColor: colors.cardBackground },
+            ]}
+            data={cityOptions}
+            labelField="label"
+            valueField="value"
+            placeholder="Select City"
+            value={city}
+            onChange={(item) => {
+              setCity(item.value);
+              setCityError("");
+            }}
+            // containerStyle={{
+            //   backgroundColor: colors.surface,
+            //   borderRadius: BorderRadius.large,
+            //   borderColor: colors.divider,
+            //   borderWidth: 1,
+            // }}
+            placeholderStyle={{
+              fontFamily: Fonts.quicksand.bold,
+              fontSize: FontSizes.small,
+              color: colors.textTertiary,
+            }}
+            selectedTextStyle={{
+              fontFamily: Fonts.quicksand.bold,
+              fontSize: FontSizes.small,
+              color: colors.textPrimary,
+            }}
+            itemTextStyle={{
+              fontFamily: Fonts.quicksand.bold,
+              fontSize: FontSizes.small,
+              color: colors.textPrimary,
+            }}
+          />
+          {cityError ? <Text style={styles.error}>{cityError}</Text> : null}
 
-        {/* EDITABLE FIELDS */}
-        <InputAuthField
-          label="Alternate Number"
-          keyboardType="number-pad"
-          value={alternateNumber}
-          onChangeText={setAlternateNumber}
-        />
+          {/* EDITABLE FIELDS */}
+          <InputAuthField
+            label="Alternate Number"
+            keyboardType="number-pad"
+            value={alternateNumber}
+            onChangeText={setAlternateNumber}
+            maxLength={10}
+          />
 
-        <InputAuthField
-          label="Gotra"
-          value={gotra}
-          onChangeText={setGotra}
-        />
+          <InputAuthField
+            label="Gotra"
+            value={gotra}
+            onChangeText={setGotra}
+          />
 
-        <InputAuthField
-          label="Address"
-          value={address}
-          onChangeText={(text) => {
-            setAddress(text);
-            setAddressError("");
-          }}
-          error={addressError}
-        />
+          <InputAuthField
+            label="Address"
+            value={address}
+            onChangeText={(text) => {
+              setAddress(text);
+              // setAddressError("");
+            }}
+            error={addressError}
+          />
 
-        {/* BUTTON */}
-        <ButtonWithLoader
-          text="Save Changes"
-          isLoading={pending}
-          onPress={handleUpdateProfile}
-        />
-      </ScrollView>
-    </KeyboardAvoidingView>
+          {/* BUTTON */}
+          <ButtonWithLoader
+            text="Save Changes"
+            isLoading={pending}
+            onPress={handleUpdateProfile}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -309,11 +381,12 @@ export default function UpdateProfile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: 20,
   },
 
   profile: {
     alignItems: "center",
-    marginBottom: Spacing.xl,
+    marginBottom: Spacing.lg,
   },
 
   avatarWrapper: {
@@ -324,9 +397,21 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: 45,
+    position: "relative",
+  },
+  editButton: {
+    position: "absolute",
+    bottom: -4,
+    right: -4,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   dropdown: {
+    height: 50,
     borderRadius: BorderRadius.large,
     padding: 14,
     marginBottom: 6,

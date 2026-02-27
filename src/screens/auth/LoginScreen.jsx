@@ -8,27 +8,30 @@ import {
   KeyboardAvoidingView,
   Platform,
   StatusBar,
-  Alert,
 } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Eye, EyeOff, Lock, Phone, LockKeyhole } from "lucide-react-native";
+
 import InputAuthField from "../../components/InputAuthField";
 import ButtonWithLoader from "../../components/ButtonWithLoader";
-import { fetchLogin } from "../../redux/slices/authSlice"; // ✅ IMPORTANT
+import { fetchLogin } from "../../redux/slices/authSlice";
+
 import {
   useTheme,
   FontSizes,
   Fonts,
   Spacing,
   BorderRadius,
+  DeviceSize
 } from "../../theme/theme";
+import { useNavigation } from "@react-navigation/native";
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = () => {
   const { colors, isDarkMode } = useTheme();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
-  // 🔥 Redux states
   const { pending, token, error, fcmToken } = useSelector(
     (state) => state.auth
   );
@@ -37,17 +40,36 @@ const LoginScreen = ({ navigation }) => {
   const [pin, setPin] = useState("");
   const [securePin, setSecurePin] = useState(true);
 
-  // =============================
-  // 🔐 LOGIN HANDLER
-  // =============================
-  const handleLogin = async () => {
-    if (phone.length !== 10) {
-      Alert.alert("Error", "Please enter valid phone number");
+  /* ✅ ERROR STATES */
+  const [phoneError, setPhoneError] = useState("");
+  const [pinError, setPinError] = useState("");
+
+  /* =============================
+     🔐 LOGIN HANDLER
+  ============================= */
+  const handleLogin = () => {
+    setPhoneError("");
+    setPinError("");
+
+    /* PHONE VALIDATION */
+    if (!phone) {
+      setPhoneError("Phone number not entered");
       return;
     }
 
+    if (phone.length !== 10) {
+      setPhoneError("Phone number is wrong");
+      return;
+    }
+
+    /* PIN VALIDATION */
     if (!pin) {
-      Alert.alert("Error", "Please enter PIN");
+      setPinError("PIN not entered");
+      return;
+    }
+
+    if (pin.length < 4) {
+      setPinError("Invalid PIN");
       return;
     }
 
@@ -55,29 +77,55 @@ const LoginScreen = ({ navigation }) => {
       fetchLogin({
         mobile: phone,
         pin: pin,
-        fcmToken: fcmToken, // already stored in redux
+        fcmToken: fcmToken,
       })
     );
   };
 
-  // =============================
-  // 🔁 LOGIN SUCCESS LISTENER
-  // =============================
+  /* =============================
+     ✅ LOGIN SUCCESS
+  ============================= */
   useEffect(() => {
     if (token) {
-      Alert.alert("Success", "Login successful");
-
-      // 👉 Navigate after login
-      // navigation.replace("Home");
+      navigation.replace("Home");
     }
   }, [token]);
+
+  /* =============================
+     ❌ BACKEND ERROR
+  ============================= */
+  // useEffect(() => {
+  //   if (error) {
+  //     setPinError(error);   // Show backend error under PIN
+  //   }
+  // }, [error]);
+
+  useEffect(() => {
+  if (!error) return;
+
+  const msg = error.toLowerCase();
+
+  const isMobileError =
+    msg.includes("mobile") ||
+    msg.includes("number") ||
+    msg.includes("record") ||
+    msg.includes("रिकॉर्ड") ||   // ✅ Hindi backend safe
+    msg.includes("नंबर");
+
+  if (isMobileError) {
+    setPhoneError(error);   // ✅ Show ONLY under Mobile
+    setPinError("");
+  } else {
+    setPinError(error);     // ✅ Show ONLY under PIN
+    setPhoneError("");
+  }
+}, [error]);
 
   return (
     <KeyboardAvoidingView
       style={[styles.container, { backgroundColor: colors.background }]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      {/* STATUS BAR */}
       <StatusBar
         translucent={false}
         backgroundColor={colors.background}
@@ -122,7 +170,11 @@ const LoginScreen = ({ navigation }) => {
           icon={<Phone size={18} color={colors.textSecondary} />}
           maxLength={10}
           value={phone}
-          onChangeText={setPhone}
+          onChangeText={(text) => {
+            setPhone(text);
+          
+          }}
+          error={phoneError}
         />
 
         {/* PIN */}
@@ -135,7 +187,10 @@ const LoginScreen = ({ navigation }) => {
           isSecure={securePin}
           maxLength={6}
           value={pin}
-          onChangeText={setPin}
+          onChangeText={(text) => {
+            setPin(text);
+            setPinError("");     // Clear error while typing
+          }}
           rightIcon={
             securePin ? (
               <EyeOff size={18} color={colors.textSecondary} />
@@ -144,6 +199,7 @@ const LoginScreen = ({ navigation }) => {
             )
           }
           onRightIconPress={() => setSecurePin(!securePin)}
+          error={pinError}
         />
 
         {/* FORGOT PIN */}
@@ -161,7 +217,7 @@ const LoginScreen = ({ navigation }) => {
         {/* LOGIN BUTTON */}
         <ButtonWithLoader
           text="Login"
-          isLoading={pending} // 🔥 Redux pending
+          isLoading={pending}
           onPress={handleLogin}
         />
       </View>
@@ -204,17 +260,16 @@ const styles = StyleSheet.create({
   },
 
   logoCircle: {
-    width: 90,
-    height: 90,
+    width: DeviceSize.hp(20),
+    height: DeviceSize.hp(18),
     borderRadius: 45,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: Spacing.md,
   },
-
   logo: {
-    width: 60,
-    height: 60,
+    width: DeviceSize.hp(14),
+    height: DeviceSize.hp(14),
     resizeMode: "contain",
   },
 
@@ -243,7 +298,7 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
 
-   registerWrapper: {
+  registerWrapper: {
     marginTop: Spacing.lg,
     alignItems: "center",
   },

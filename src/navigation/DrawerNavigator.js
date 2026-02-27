@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Image,
+  Modal,
 } from "react-native";
 
 import LinearGradient from "react-native-linear-gradient";
@@ -27,7 +28,11 @@ import {
 import { DeviceSize, FontSizes, Fonts, useTheme } from "../theme/theme";
 
 import MainStack from "./MainStack";
-import {AboutScreen, GalleryScreen, TermScreen, } from "./index";
+import { AboutScreen, GalleryScreen, TermScreen, } from "./index";
+import { logout } from '../redux/slices/authSlice';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector, useDispatch } from "react-redux";
+import ButtonWithLoader from "../components/ButtonWithLoader";
 
 
 const Drawer = createDrawerNavigator();
@@ -37,6 +42,14 @@ const Drawer = createDrawerNavigator();
 ===================================================== */
 function CustomDrawerContent(props) {
   const { colors, isDarkMode } = useTheme();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
+  const handleLogout = async () => {
+    await AsyncStorage.setItem('APP_THEME', 'light');
+    dispatch(logout({ token }));
+  };
+
   const currentRoute =
     props.state?.routeNames[props.state.index];
 
@@ -49,6 +62,8 @@ function CustomDrawerContent(props) {
       <DrawerContentScrollView
         {...props}
         showsVerticalScrollIndicator={false}
+
+        contentContainerStyle={styles.scrollContainer}
       >
         {/* HEADER */}
         <View
@@ -110,7 +125,7 @@ function CustomDrawerContent(props) {
             onPress={() => props.navigation.navigate("GalleryScreen")}
           />
 
-           <DrawerItem
+          <DrawerItem
             label="Terms"
             route="TermScreen"
             Icon={FileText}
@@ -120,7 +135,7 @@ function CustomDrawerContent(props) {
             onPress={() => props.navigation.navigate("TermScreen")}
           />
 
-           <DrawerItem
+          <DrawerItem
             label="About Us"
             route="AboutScreen"
             Icon={Info}
@@ -130,11 +145,9 @@ function CustomDrawerContent(props) {
             onPress={() => props.navigation.navigate("AboutScreen")}
           />
 
-         
-        </View>
-      </DrawerContentScrollView>
 
-      {/* LOGOUT */}
+        </View>
+         {/* LOGOUT */}
       <TouchableOpacity
         style={[
           styles.logoutCard,
@@ -143,12 +156,68 @@ function CustomDrawerContent(props) {
             borderColor: colors.divider,
           },
         ]}
+        onPress={() => setShowLogoutModal(true)}
       >
         <LogOut size={20} color={colors.error} />
         <Text style={[styles.logoutText, { color: colors.error }]}>
           Logout
         </Text>
       </TouchableOpacity>
+      </DrawerContentScrollView>
+
+     
+
+      <Modal
+        visible={showLogoutModal}
+        transparent
+        animationType="fade"
+      >
+        <View style={styles.modalOverlay}>
+          <View
+            style={[
+              styles.modalCard,
+              { backgroundColor: colors.cardBackground }
+            ]}
+          >
+            <View
+              style={[
+                styles.modalIconWrapper,
+                { backgroundColor: colors.error + "22" }
+              ]}
+            >
+              <LogOut size={28} color={colors.error} />
+            </View>
+
+            <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
+              Confirm Logout
+            </Text>
+
+            <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
+              Are you sure you want to logout?
+            </Text>
+
+            <View style={styles.modalButtons}>
+              <ButtonWithLoader
+                text="Cancel"
+                bgColor={colors.divider}
+                textColor={colors.textPrimary}
+                onPress={() => setShowLogoutModal(false)}
+              />
+
+              <ButtonWithLoader
+                text="Logout"
+                bgColor={colors.error}
+                isLoading={false}
+                onPress={() => {
+                  setShowLogoutModal(false);
+                  handleLogout();
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
     </LinearGradient>
   );
 }
@@ -240,7 +309,7 @@ export default function DrawerNavigator() {
       <Drawer.Screen name="TermScreen" component={TermScreen} />
       <Drawer.Screen name="AboutScreen" component={AboutScreen} />
 
-     
+
     </Drawer.Navigator>
   );
 }
@@ -253,6 +322,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 10,
   },
+
   header: {
     alignItems: "center",
     marginBottom: 25,
@@ -302,8 +372,8 @@ const styles = StyleSheet.create({
   logoutCard: {
     flexDirection: "row",
     alignItems: "center",
-    margin: 16,
-    padding: 14,
+    margin: 10,
+    padding: 18,
     borderRadius: 12,
     borderWidth: 1,
   },
@@ -311,5 +381,45 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontFamily: Fonts.quicksand.bold,
     fontSize: FontSizes.medium,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.45)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalCard: {
+    width: DeviceSize.wp(82),
+    borderRadius: 22,
+    padding: 22,
+    alignItems: "center",
+  },
+
+  modalIconWrapper: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 14,
+  },
+
+  modalTitle: {
+    fontFamily: Fonts.inter.bold,
+    fontSize: FontSizes.medium,
+    marginBottom: 6,
+  },
+
+  modalMessage: {
+    fontFamily: Fonts.quicksand.medium,
+    fontSize: FontSizes.small,
+    textAlign: "center",
+    marginBottom: 20,
+  },
+
+  modalButtons: {
+    width: "100%",
+    gap: 10,
   },
 });

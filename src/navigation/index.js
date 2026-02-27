@@ -17,6 +17,8 @@ export { default as MyContactScreen } from '../screens/common/MyContactScreen';
 export { default as OurProud } from '../screens/common/OurProud';
 export { default as PostScreen } from '../screens/common/PostScreen';
 export { default as PostDetail } from '../screens/common/PostDetail';
+export { default as MyPostScreen } from '../screens/post/MyPostScreen';
+export { default as EditMyPost } from '../screens/post/EditMyPost';
 export { default as ProfileScreen } from '../screens/common/ProfileScreen';
 export { default as UpdateProfile } from '../screens/common/UpdateProfile';
 export { default as TermScreen } from '../screens/common/TermScreen';

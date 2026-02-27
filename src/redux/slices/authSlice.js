@@ -32,6 +32,9 @@ const initialState = {
   firstTime: true,
 
   fcmToken: null,
+
+  otpError: null,
+  otpSuccess: false,
 };
 
 // export const chkLogin = createAsyncThunk('auth/chkLogin', async thunkAPI => {
@@ -84,6 +87,7 @@ export const fetchLogin = createAsyncThunk(
       return res; // { user, token }
     } catch (e) {
       const message =
+        e?.response?.data?.errors ||
         e?.response?.data?.message ||
         e.message ||
         e.toString();
@@ -279,26 +283,47 @@ export const authSlice = createSlice({
   },
   extraReducers: builder => {
     ////////////////////////////===========Login==========/////////////////////////////
+    // builder.addCase(fetchLogin.pending, (state) => {
+    //   state.pending = true;
+    //   state.error = false;
+    // });
+
+    // builder.addCase(fetchLogin.fulfilled, (state, action) => {
+    //   // console.log(action.payload.user.paid);
+
+    //   if (action.payload.errors === undefined) {
+    //     authService.commanTask(state, action);
+    //     // authService.createChannel();
+    //   } else {
+    //     commanServices.showToast(action.payload.errors);
+    //   }
+    //   state.pending = false;
+    // });
+
+    // builder.addCase(fetchLogin.rejected, (state, action) => {
+    //   state.pending = false;
+    //   state.error = true;
+    //   state.token = null;
+    // });
+
     builder.addCase(fetchLogin.pending, (state) => {
       state.pending = true;
-      state.error = false;
+      state.error = null;      // ✅ CLEAR OLD ERROR
     });
 
     builder.addCase(fetchLogin.fulfilled, (state, action) => {
-      // console.log(action.payload.user.paid);
-
       if (action.payload.errors === undefined) {
         authService.commanTask(state, action);
-        // authService.createChannel();
       } else {
-        commanServices.showToast(action.payload.errors);
+        state.error = action.payload.errors;   // ✅ Store error properly
       }
+
       state.pending = false;
     });
 
     builder.addCase(fetchLogin.rejected, (state, action) => {
       state.pending = false;
-      state.error = true;
+      state.error = action.payload;   // ✅ STORE MESSAGE
       state.token = null;
     });
 
@@ -394,28 +419,49 @@ export const authSlice = createSlice({
       state.token = null;
     });
     //////////////////////✖✖✖✖✖✖✖✖✖ 🚥 Resend OTP 🚥 ✖✖✖✖✖✖✖✖✖✖✖/////////////////////
+    // builder.addCase(ResendOtp.pending, (state, action) => {
+    //   // console.log('Pending State');
+    //   state.pending = true;
+    // });
+    // builder.addCase(ResendOtp.fulfilled, (state, action) => {
+    //   if (action.payload.errors === undefined) {
+    //     console.log(action.payload);
+    //     state.isOtp = true;
+    //     // console.log('is OTP true part' + state.isOtp);
+    //     commanServices.showToast(action.payload.message);
+    //   } else {
+    //     state.isOtp = false;
+    //     console.log('is OTP else part' + state.isOtp);
+    //     commanServices.showToast(action.payload.errors);
+    //   }
+    //   state.pending = false;
+    // });
+    // builder.addCase(ResendOtp.rejected, (state, action) => {
+    //   console.log(action.payload);
+    //   state.pending = false;
+    //   state.error = true;
+    //   state.token = null;
+    // });
+
+
     builder.addCase(ResendOtp.pending, (state, action) => {
       // console.log('Pending State');
       state.pending = true;
     });
     builder.addCase(ResendOtp.fulfilled, (state, action) => {
-      if (action.payload.errors === undefined) {
-        console.log(action.payload);
-        state.isOtp = true;
-        // console.log('is OTP true part' + state.isOtp);
-        commanServices.showToast(action.payload.message);
-      } else {
-        state.isOtp = false;
-        console.log('is OTP else part' + state.isOtp);
-        commanServices.showToast(action.payload.errors);
-      }
       state.pending = false;
+      if (action.payload.errors) {
+        state.otpSuccess = false;
+        state.otpError = action.payload.errors;   // ✅ Save error
+      } else {
+        state.otpSuccess = true;
+        state.otpError = null;                    // ✅ Clear error
+      }
     });
     builder.addCase(ResendOtp.rejected, (state, action) => {
-      console.log(action.payload);
       state.pending = false;
-      state.error = true;
-      state.token = null;
+      state.otpSuccess = false;
+      state.otpError = action.payload;   // ✅ THIS LINE FIXES EVERYTHING
     });
 
     //////////////////////✖✖✖✖✖✖✖✖✖ 🚥 Logout 🚥 ✖✖✖✖✖✖✖✖✖✖✖/////////////////////

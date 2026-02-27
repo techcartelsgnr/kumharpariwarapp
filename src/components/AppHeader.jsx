@@ -5,11 +5,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
-  Platform,
 } from "react-native";
 import { ArrowLeft } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
-
 
 import { FontSizes, Fonts, Spacing, useTheme } from "../theme/theme";
 

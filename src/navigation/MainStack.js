@@ -20,6 +20,9 @@ import {
   UpdateProfile,
   HostelDetail,
   PostDetail,
+  MyContactScreen,
+  MyPostScreen,
+  EditMyPost,
 } from './index';
 
 const Stack = createNativeStackNavigator();
@@ -44,10 +47,13 @@ const MainStack = () => {
       <Stack.Screen name="SuggestionScreen" component={SuggestionScreen} />
       <Stack.Screen name="AddPostScreen" component={AddPostScreen} />
       <Stack.Screen name="AddContact" component={AddContact} />
+      <Stack.Screen name="MyContactScreen" component={MyContactScreen} />
       <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
       <Stack.Screen name="KaryKarniScreen" component={KaryKarniScreen} />
       <Stack.Screen name="KaryakariniMembers" component={KaryakariniMembers} />
       <Stack.Screen name="PostDetail" component={PostDetail} />
+      <Stack.Screen name="MyPostScreen" component={MyPostScreen} />
+      <Stack.Screen name="EditMyPost" component={EditMyPost} />
       
     </Stack.Navigator>
   );

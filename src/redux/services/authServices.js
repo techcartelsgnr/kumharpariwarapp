@@ -71,6 +71,8 @@ const ResendOtp = async ({ mobile }) => {
   return response.data;
 };
 
+
+
 const logout = async ({ token }) => {
   const response = await authAxios.post(
     `/logout`,

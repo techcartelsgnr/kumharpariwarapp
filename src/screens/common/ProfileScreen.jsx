@@ -8,6 +8,7 @@ import {
   ScrollView,
   StatusBar,
   Switch, // ✅ NEW
+  Modal,
 } from "react-native";
 
 import {
@@ -21,6 +22,8 @@ import {
   Users,
   Building2,
   Hotel,
+  LogOut,
+  Contact,
 } from "lucide-react-native";
 
 import { useNavigation } from "@react-navigation/native";
@@ -36,8 +39,10 @@ import {
   Fonts,
   Spacing,
   BorderRadius,
+  DeviceSize,
 } from "../../theme/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ButtonWithLoader from "../../components/ButtonWithLoader";
 
 /* =====================================================
    PROFILE SCREEN
@@ -45,6 +50,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -134,9 +140,16 @@ const ProfileScreen = () => {
           </Text>
 
           <OptionItem
-            icon={<UserPlus size={20} color="#A97142" />}
+            icon={<UserPlus size={20} color="#8F87F1" />}
             label="Add Contact to Directory"
             onPress={() => navigation.navigate("AddContact")}
+            colors={colors}
+          />
+
+          <OptionItem
+            icon={<Contact size={20} color="#0ABAB5" />}
+            label="My Contacts"
+            onPress={() => navigation.navigate("MyContactScreen")}
             colors={colors}
           />
 
@@ -144,6 +157,13 @@ const ProfileScreen = () => {
             icon={<PlusSquare size={20} color="#F4B400" />}
             label="Add Post"
             onPress={() => navigation.navigate("AddPostScreen")}
+            colors={colors}
+          />
+
+           <OptionItem
+            icon={<PlusSquare size={20} color="#F4B400" />}
+            label="My Post"
+            onPress={() => navigation.navigate("MyPostScreen")}
             colors={colors}
           />
 
@@ -161,7 +181,7 @@ const ProfileScreen = () => {
             colors={colors}
           />
           <OptionItem
-            icon={<Users size={20} color="#FF6B6B" />}
+            icon={<Users size={20} color="#0ABAB5" />}
             label="कार्यकारिणी"
             onPress={() => navigation.navigate("KaryKarniScreen")}
             colors={colors}
@@ -215,10 +235,61 @@ const ProfileScreen = () => {
           </View>
 
           <View style={styles.logoutBox}>
-            <TouchableOpacity onPress={handleLogout}>
+            <TouchableOpacity onPress={() => setShowLogoutModal(true)}>
               <Text style={[styles.logoutText, { color: colors.textTertiary }]}>Logout</Text>
             </TouchableOpacity>
           </View>
+
+          <Modal
+            visible={showLogoutModal}
+            transparent
+            animationType="fade"
+          >
+            <View style={styles.modalOverlay}>
+              <View
+                style={[
+                  styles.modalCard,
+                  { backgroundColor: colors.cardBackground }
+                ]}
+              >
+                <View
+                  style={[
+                    styles.modalIconWrapper,
+                    { backgroundColor: colors.error + "22" }
+                  ]}
+                >
+                  <LogOut size={28} color={colors.error} />
+                </View>
+
+                <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
+                  Confirm Logout
+                </Text>
+
+                <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
+                  Are you sure you want to logout?
+                </Text>
+
+                <View style={styles.modalButtons}>
+                  <ButtonWithLoader
+                    text="Cancel"
+                    bgColor={colors.divider}
+                    textColor={colors.textPrimary}
+                    onPress={() => setShowLogoutModal(false)}
+                  />
+
+                  <ButtonWithLoader
+                    text="Logout"
+                    bgColor={colors.error}
+                    isLoading={false}
+                    onPress={() => {
+                      setShowLogoutModal(false);
+                      handleLogout();
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+          </Modal>
 
           {/* =====================================================
             🔹 FOOTER
@@ -376,5 +447,45 @@ const styles = StyleSheet.create({
     marginTop: Spacing.sm,
     fontFamily: Fonts.quicksand.medium,
     fontSize: FontSizes.small,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.45)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalCard: {
+    width: DeviceSize.wp(82),
+    borderRadius: 22,
+    padding: 22,
+    alignItems: "center",
+  },
+
+  modalIconWrapper: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 14,
+  },
+
+  modalTitle: {
+    fontFamily: Fonts.inter.bold,
+    fontSize: FontSizes.medium,
+    marginBottom: 6,
+  },
+
+  modalMessage: {
+    fontFamily: Fonts.quicksand.medium,
+    fontSize: FontSizes.small,
+    textAlign: "center",
+    marginBottom: 20,
+  },
+
+  modalButtons: {
+    width: "100%",
+    gap: 10,
   },
 });

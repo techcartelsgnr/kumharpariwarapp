@@ -14,7 +14,7 @@ import {
 
 import { useDispatch } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { Eye, EyeOff, Phone, LockKeyhole, User, Mail } from "lucide-react-native";
+import { Eye, EyeOff, Phone, LockKeyhole, User, Mail, ArrowLeft } from "lucide-react-native";
 
 import InputAuthField from "../../components/InputAuthField";
 import ButtonWithLoader from "../../components/ButtonWithLoader";
@@ -28,6 +28,7 @@ import {
   Fonts,
   Spacing,
   BorderRadius,
+  DeviceSize
 } from "../../theme/theme";
 
 const RegisterScreen = ({ navigation }) => {
@@ -99,13 +100,25 @@ const RegisterScreen = ({ navigation }) => {
         backgroundColor={colors.background}
         barStyle={isDarkMode ? "light-content" : "dark-content"}
       />
+       <View style={styles.topBar}>
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  activeOpacity={0.7}
+                  style={[
+                    styles.backButton,
+                    { backgroundColor: colors.cardBackground }
+                  ]}
+                >
+                  <ArrowLeft size={20} color={colors.textPrimary} />
+                </TouchableOpacity>
+              </View>
 
       {/* LOGO */}
       <View style={styles.logoWrapper}>
         <View
           style={[
             styles.logoCircle,
-            { backgroundColor: colors.cardBackground },
+            // { backgroundColor: colors.cardBackground },
           ]}
         >
           <Image
@@ -210,17 +223,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: Spacing.xl,
   },
+  topBar: {
+    position: "absolute",
+    top: Platform.OS === "ios" ? 70 : 75,
+    left: 20,
+    right: 0,
+    zIndex: 10,
+  },
+
+  backButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 4,
+  },
   logoCircle: {
-    width: 90,
-    height: 90,
+    width: DeviceSize.hp(20),
+    height: DeviceSize.hp(14),
     borderRadius: 45,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: Spacing.md,
   },
   logo: {
-    width: 60,
-    height: 60,
+    width: DeviceSize.hp(14),
+    height: DeviceSize.hp(14),
     resizeMode: "contain",
   },
   appTitle: {
